@@ -1,0 +1,70 @@
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# IntelliJ IDEA specific
+.idea
+*.iml
+
+# Eclipse specific
+*.metadata
+*.recommenders
+*.settings
+*.vscode
+
+# NetBeans specific
+nb-configuration.xml
+nbactions.xml
+nb-gradle/
+
+# Gradle files
+.gradle/
+build/
+!gradle-wrapper.jar
+
+# Maven files
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.recommenders
+
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+### Mac OS ###
+.DS_Store
