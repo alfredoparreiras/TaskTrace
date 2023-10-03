@@ -8,11 +8,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet(name="HomeServlet", urlPatterns = {"", "/home"})
-public class HomeServlet extends HttpServlet {
-
+@WebServlet(name="SignUpController", urlPatterns = "/signup")
+public class SignUpController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("WEB-INF/index.jsp").forward(request,response);
+        request.getRequestDispatcher("WEB-INF/signup.jsp").forward(request,response);
     }
 }

@@ -13,6 +13,19 @@
 }
 
 /* Project */
-.header {
-    height: 5vh;
+.initial__heading {
+    font-size: 7rem;
+}
+
+button:hover {
+    -webkit-box-shadow: 0px -1px 0px 5px #51BEFF;
+    box-shadow: 0px -1px 0px 5px #ffffff;
+}
+
+.header .footer{
+    height: 7vh;
+}
+
+.mt-6{
+    margin-top: 5rem;
 }
