@@ -5,6 +5,7 @@
   Time: 4:11 p.m.
   To change this template use File | Settings | File Templates.
 --%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -16,6 +17,21 @@
   <link href="${pageContext.request.contextPath}/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <script src="${pageContext.request.contextPath}/resources/bootstrap/js/bootstrap.min.js"></script>
   <link rel="icon" href="${pageContext.request.contextPath}/resources/images/icons/login.svg" type="image/svg">
+<%--  TODO: Uncomment when validations are done.--%>
+<%--  <script>--%>
+<%--    window.onload = function () {--%>
+<%--      let loginForm = document.getElementById('loginForm');--%>
+<%--      let email = document.getElementById('email');--%>
+<%--      let password = document.getElementById('password');--%>
+
+<%--      loginForm.addEventListener('submit', function(event) {--%>
+<%--        if(!email.value.trim() || !password.value.trim()){--%>
+<%--          event.preventDefault();--%>
+<%--          alert("Please fill out all required fields.")--%>
+<%--        }--%>
+<%--      })--%>
+<%--    }--%>
+<%--  </script>--%>
 </head>
 <body class="vh-100">
   <header class="header bg-primary d-flex align-items-center">
@@ -23,18 +39,18 @@
   </header>
 <section class="d-flex flex-column align-items-center mt-6">
   <h1 class="display-5 text-primary">Login</h1>
-  <form>
+  <form id="loginForm" action="${pageContext.request.contextPath}/dashboard" method="post">
     <div class="mb-3">
-      <label for="exampleInputEmail1" class="form-label">Email address</label>
-      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      <label for="email" class="form-label">Email address</label>
+      <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
       <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
     </div>
     <div class="row g-3 align-items-center">
       <div class="col-auto">
-        <label for="inputPassword6" class="col-form-label">Password</label>
+        <label for="password" class="col-form-label">Password</label>
       </div>
       <div class="col-auto">
-        <input type="password" id="inputPassword6" class="form-control" aria-describedby="passwordHelpInline">
+        <input type="password" id="password" class="form-control" aria-describedby="passwordHelpInline">
       </div>
       <div class="col-auto">
     <span id="passwordHelpInline" class="form-text">

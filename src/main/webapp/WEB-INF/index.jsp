@@ -23,10 +23,10 @@
 <h3 class="text-white display-4">Bridging the gap between To-Do and Done.</h3>
 <section class="d-flex justify-content-center w-25 justify-content-evenly mt-5">
     <a href="${pageContext.request.contextPath}/signup" class="text-decoration-none">
-        <button type="button" class="btn btn-light btn-lg text-primary">Sign Up</button>
+        <button type="button" class="btn btn-light btn-lg text-primary initial__button">Sign Up</button>
     </a>
     <a href="${pageContext.request.contextPath}/login" class="text-decoration-none">
-        <button type="button" class="btn btn-light btn-lg text-primary">Log In</button>
+        <button type="button" class="btn btn-light btn-lg text-primary initial__button">Log In</button>
     </a>
 </section>
 <footer class="position-fixed bottom-0 start-0 w-100 test">

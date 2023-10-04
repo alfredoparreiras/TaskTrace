@@ -15,7 +15,21 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/styles.css">
     <link href="${pageContext.request.contextPath}/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="${pageContext.request.contextPath}/resources/bootstrap/js/bootstrap.min.js"></script>
-    <link rel="icon" href="${pageContext.request.contextPath}/resources/images/icons/signup.svg.svg" type="image/svg">
+    <link rel="icon" href="${pageContext.request.contextPath}/resources/images/icons/signup.svg" type="image/svg">
+    <script>
+        window.onload = function () {
+            let checkbox = document.getElementById('termsCheckbox');
+            let signupForm = document.getElementById('signupForm');
+
+            signupForm.addEventListener('submit', function (event) {
+                if (!checkbox.checked) {
+                    event.preventDefault();
+                    alert("Please agree to the terms and conditions.");
+                }
+            });
+        }
+    </script>
+
 </head>
 <body class="vh-100">
 <header class="header bg-primary d-flex align-items-center">
@@ -23,7 +37,7 @@
 </header>
 <section class="d-flex flex-column align-items-center mt-6">
     <h1 class="display-5 text-primary">Sign Up</h1>
-    <form class="w-25">
+    <form id="signupForm" class="w-25" action="${pageContext.request.contextPath}/register" method="post">
         <div class="mb-3">
             <label for="nameInput" class="form-label">Name</label>
             <input type="text" class="form-control" id="nameInput" aria-describedby="nameHelp">
@@ -41,8 +55,8 @@
             <input type="password" class="form-control" id="confirmPasswordInput">
         </div>
         <div class="mb-3 form-check mt-4">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-            <label class="form-check-label" for="exampleCheck1">Agree with <a href="/terms">terms and conditions</a>.</label>
+            <input type="checkbox" class="form-check-input" id="termsCheckbox">
+            <label class="form-check-label" for="termsCheckbox">Agree with <a href="${pageContext.request.contextPath}/terms">terms and conditions</a>.</label>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
         <a href="${pageContext.request.contextPath}/home"><button type="button" class="btn btn-outline-secondary mt-1 ms-5">Return</button></a>
