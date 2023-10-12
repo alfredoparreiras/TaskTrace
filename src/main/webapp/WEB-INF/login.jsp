@@ -1,10 +1,20 @@
-<%--
+<%@ page import="io.tasktrace.tasktrace.models.User" %><%--
   Created by IntelliJ IDEA.
   User: alfredops
   Date: 10/3/23
   Time: 4:11 p.m.
   To change this template use File | Settings | File Templates.
 --%>
+<%
+  User loggedUser = null;
+  String message = null;
+
+  if(request.getAttribute("errorMessage") != null)
+    message = (String) request.getAttribute("errorMessage");
+
+  if(session.getAttribute("loggedUser") != null)
+    loggedUser = (User) session.getAttribute("loggedUser");
+%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -17,21 +27,20 @@
   <link href="${pageContext.request.contextPath}/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <script src="${pageContext.request.contextPath}/resources/bootstrap/js/bootstrap.min.js"></script>
   <link rel="icon" href="${pageContext.request.contextPath}/resources/images/icons/login.svg" type="image/svg">
-<%--  TODO: Uncomment when validations are done.--%>
-<%--  <script>--%>
-<%--    window.onload = function () {--%>
-<%--      let loginForm = document.getElementById('loginForm');--%>
-<%--      let email = document.getElementById('email');--%>
-<%--      let password = document.getElementById('password');--%>
+  <script>
+    window.onload = function () {
+      let loginForm = document.getElementById('loginForm');
+      let email = document.getElementById('email');
+      let password = document.getElementById('password');
 
-<%--      loginForm.addEventListener('submit', function(event) {--%>
-<%--        if(!email.value.trim() || !password.value.trim()){--%>
-<%--          event.preventDefault();--%>
-<%--          alert("Please fill out all required fields.")--%>
-<%--        }--%>
-<%--      })--%>
-<%--    }--%>
-<%--  </script>--%>
+      loginForm.addEventListener('submit', function(event) {
+        if(!email.value.trim() || !password.value.trim()){
+          event.preventDefault();
+          alert("Please fill out all required fields.")
+        }
+      })
+    }
+  </script>
 </head>
 <body class="vh-100">
   <header class="header bg-primary d-flex align-items-center">
@@ -39,10 +48,14 @@
   </header>
 <section class="d-flex flex-column align-items-center mt-6">
   <h1 class="display-5 text-primary">Login</h1>
-  <form id="loginForm" action="${pageContext.request.contextPath}/dashboard" method="post">
+  <form id="loginForm" action="${pageContext.request.contextPath}/login" method="post">
     <div class="mb-3">
       <label for="email" class="form-label">Email address</label>
-      <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+      <%if(loggedUser != null){%>
+        <input type="email" class="form-control" id="email" name="email" value="<%=loggedUser.getEmail()%>" aria-describedby="emailHelp">
+      <%} else {%>
+        <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp">
+      <%}%>
       <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
     </div>
     <div class="row g-3 align-items-center">
@@ -50,7 +63,7 @@
         <label for="password" class="col-form-label">Password</label>
       </div>
       <div class="col-auto">
-        <input type="password" id="password" class="form-control" aria-describedby="passwordHelpInline">
+        <input type="password" id="password" class="form-control" name="password" aria-describedby="passwordHelpInline">
       </div>
       <div class="col-auto">
     <span id="passwordHelpInline" class="form-text">
@@ -60,11 +73,14 @@
     </div>
     <div class="mb-3 form-check mt-4">
       <input type="checkbox" class="form-check-input" id="exampleCheck1">
-      <label class="form-check-label" for="exampleCheck1">Save my email</label>
+      <label class="form-check-label" for="exampleCheck1" name="saveEmailCheckbox">Save my email</label>
     </div>
     <button type="submit" class="btn btn-primary mt-1">Submit</button>
     <a href="${pageContext.request.contextPath}/home"><button type="button" class="btn btn-outline-secondary mt-1 ms-5">Return</button></a>
   </form>
+  <%if(message != null){%>
+    <p class="mt-3 text-danger text-center"><%=message%></p>
+  <%}%>
 </section>
 <footer class="fixed-bottom bg-primary footer d-flex align-items-center justify-content-center">
   <p class="text-white text-center fs-5 pt-3">TaskTrace © 2023</p>

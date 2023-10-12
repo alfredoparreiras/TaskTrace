@@ -1,4 +1,4 @@
-<%--
+<%@ page import="io.tasktrace.tasktrace.models.User" %><%--
   Created by IntelliJ IDEA.
   User: alfredops
   Date: 10/4/23
@@ -6,6 +6,10 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    User user = (User)session.getAttribute("loggedUser");
+%>
+
 <html>
 <head>
     <title>TaskTrace - Dashboard</title>
@@ -24,6 +28,11 @@
     </a>
     <img src="${pageContext.request.contextPath}/resources/images/icons/account.svg" alt="account icon" class="icon me-3">
 </header>
+<% if(user != null){ %>
+    <h1><%=user.getFullName()%></h1>
+<% } else { %>
+    <h1>Is not working properly</h1>
+<%}%>
 <section class="dashboard__resume d-flex align-items-center justify-content-evenly mt-5">
     <div>
         <h4>Overdue</h4>
@@ -52,7 +61,6 @@
                 <th scope="col">Priority</th>
                 <th scope="col">Due Date</th>
                 <th scope="col">Category</th>
-                <th scope="col">Project</th>
                 <th scope="col">Description</th>
             </tr>
             </thead>
@@ -79,7 +87,6 @@
                 <td>High</td>
                 <td>10/06/2023</td>
                 <td>Work</td>
-                <td>Got a Job</td>
                 <td>Wrote, Build, Deploy , Check</td>
             </tr>
             </tbody>
