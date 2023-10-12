@@ -1,2 +1,4 @@
-package io.tasktrace.tasktrace.repositories;public class TaskRepository {
+package io.tasktrace.tasktrace.repositories;
+
+public class TaskRepository {
 }
