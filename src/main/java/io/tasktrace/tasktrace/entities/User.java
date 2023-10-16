@@ -1,8 +1,6 @@
-package io.tasktrace.tasktrace.models;
+package io.tasktrace.tasktrace.entities;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 public class User {
     private final String id;

@@ -1,4 +1,4 @@
-package io.tasktrace.tasktrace.models;
+package io.tasktrace.tasktrace.entities;
 
 public enum Priority {
     LOW,

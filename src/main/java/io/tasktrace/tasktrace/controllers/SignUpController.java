@@ -1,6 +1,6 @@
 package io.tasktrace.tasktrace.controllers;
 
-import io.tasktrace.tasktrace.models.User;
+import io.tasktrace.tasktrace.entities.User;
 import io.tasktrace.tasktrace.repositories.UserRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -37,7 +37,6 @@ public class SignUpController extends HttpServlet {
             if(validUser(firstName, lastName, email, password, confirmPassword) && validEmail(email, request)) {
                 // If Passwords are equal, create the user
                 if(validPasswords(password, confirmPassword)) {
-
                     userRepository.addUser(new User(firstName.toLowerCase().trim(), lastName.toLowerCase().trim(), password.trim(), email.toLowerCase().trim()));
                     request.setAttribute("message", "Your account was successfully created.");
                     request.setAttribute("wasDataFilled", true);
