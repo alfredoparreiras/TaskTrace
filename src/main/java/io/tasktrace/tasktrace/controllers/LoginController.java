@@ -1,6 +1,6 @@
 package io.tasktrace.tasktrace.controllers;
 
-import io.tasktrace.tasktrace.models.User;
+import io.tasktrace.tasktrace.entities.User;
 import io.tasktrace.tasktrace.repositories.UserRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -21,40 +21,62 @@ public class LoginController extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String saveEmailCheckbox = request.getParameter("saveEmailCheckbox");
-        Cookie saveEmailCookie = null;
+
+        //Retrieving Cookies
+        Cookie[] cookies = request.getCookies();
+        Cookie saveEmailCookie = getCookies(cookies, "saveEmailCookie");
 
         UserRepository userRepository = new UserRepository();
         try {
             User user = userRepository.getUserByEmail(email);
 
-            if(user != null && validPassword(user, password)) {
+            if(user == null)
+                request.setAttribute("errorMessage", "The user associated with this email does not exist.");
+
+            if(user != null) {
                 // If user want to save email for next access we save here through a Cookie.
                 if(saveEmailCheckbox != null){
-                    saveEmailCookie = new Cookie("saveEmail", user.getEmail());
+                    saveEmailCookie = new Cookie("saveEmailCookie", user.getEmail());
                     saveEmailCookie.setMaxAge(60 * 60 * 24 * 365 );
                     response.addCookie(saveEmailCookie);
                 }
-                else
-                //TODO: Check if this cookie exists. If extis ok setMaxAge if not jump.
-                {
+
+                if(saveEmailCheckbox == null && saveEmailCookie != null){
                     saveEmailCookie.setMaxAge(0);
                     response.addCookie(saveEmailCookie);
                 }
 
-                HttpSession session = request.getSession(true);
-                session.setAttribute("loggedUser", user);
-                request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request,response);
-            } else {
-                request.setAttribute("errorMessage", "Invalid email or password");
-                request.getRequestDispatcher("WEB-INF/login.jsp").forward(request,response);
+                if(!validPassword(user,password)){
+                    request.setAttribute("errorMessage", "Invalid password");
+                }
+                else
+                {
+                    HttpSession session = request.getSession(true);
+                    session.setAttribute("loggedUser", user);
+                    request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request,response);
+                }
             }
+
+            request.getRequestDispatcher("WEB-INF/login.jsp").forward(request,response);
         } catch (ClassNotFoundException | SQLException e) {
             // Log the exception
             e.printStackTrace();
             // Set an error message for the user
-            request.setAttribute("errorMessage", "An error occurred. Please try again.");
+
             request.getRequestDispatcher("WEB-INF/login.jsp").forward(request,response);
         }
+    }
+
+    private Cookie getCookies(Cookie[] cookies, String cookieName) {
+
+        if(cookies != null){
+            for(Cookie cookie : cookies){
+                if(cookie.getName().equals(cookieName)){
+                    return cookie;
+                }
+            }
+        }
+        return null;
     }
 
 

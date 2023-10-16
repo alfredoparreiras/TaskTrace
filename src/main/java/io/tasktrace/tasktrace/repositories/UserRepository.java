@@ -1,8 +1,7 @@
 package io.tasktrace.tasktrace.repositories;
 
-import io.tasktrace.tasktrace.models.User;
+import io.tasktrace.tasktrace.entities.User;
 
-import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.*;
@@ -96,7 +95,7 @@ public class UserRepository {
     }
 
     private User readNextUser(ResultSet resultSet) throws SQLException {
-        String id = resultSet.getString("id");
+        String id = resultSet.getString("user_id");
         String firstName = resultSet.getString("first_name");
         String lastName = resultSet.getString("last_name");
         String password = resultSet.getString("password");

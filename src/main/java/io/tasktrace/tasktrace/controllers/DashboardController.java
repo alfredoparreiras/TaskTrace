@@ -1,6 +1,6 @@
 package io.tasktrace.tasktrace.controllers;
 
-import io.tasktrace.tasktrace.models.User;
+import io.tasktrace.tasktrace.entities.User;
 import io.tasktrace.tasktrace.repositories.UserRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
