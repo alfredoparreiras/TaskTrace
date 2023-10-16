@@ -1,4 +1,4 @@
-<%@ page import="io.tasktrace.tasktrace.models.User" %><%--
+<%@ page import="io.tasktrace.tasktrace.entities.User" %><%--
   Created by IntelliJ IDEA.
   User: alfredops
   Date: 10/3/23
@@ -6,16 +6,22 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%
-  User loggedUser = null;
+  String savedEmailCookie = null;
   String message = null;
 
   if(request.getAttribute("errorMessage") != null)
     message = (String) request.getAttribute("errorMessage");
 
-  if(session.getAttribute("loggedUser") != null)
-    loggedUser = (User) session.getAttribute("loggedUser");
+  Cookie[] cookies = request.getCookies();
+  if(cookies != null){
+    for(Cookie cookie : cookies){
+      if(cookie.getName().equals("saveEmailCookie")){
+        savedEmailCookie = cookie.getValue();
+        break;
+      }
+    }
+  }
 %>
-
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -51,8 +57,8 @@
   <form id="loginForm" action="${pageContext.request.contextPath}/login" method="post">
     <div class="mb-3">
       <label for="email" class="form-label">Email address</label>
-      <%if(loggedUser != null){%>
-        <input type="email" class="form-control" id="email" name="email" value="<%=loggedUser.getEmail()%>" aria-describedby="emailHelp">
+      <%if(savedEmailCookie != null){%>
+        <input type="email" class="form-control" id="email" name="email" value="<%=savedEmailCookie%>" aria-describedby="emailHelp">
       <%} else {%>
         <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp">
       <%}%>
@@ -72,8 +78,8 @@
       </div>
     </div>
     <div class="mb-3 form-check mt-4">
-      <input type="checkbox" class="form-check-input" id="exampleCheck1">
-      <label class="form-check-label" for="exampleCheck1" name="saveEmailCheckbox">Save my email</label>
+      <input type="checkbox" class="form-check-input" id="exampleCheck1" name="saveEmailCheckbox">
+      <label class="form-check-label" for="exampleCheck1">Save my email</label>
     </div>
     <button type="submit" class="btn btn-primary mt-1">Submit</button>
     <a href="${pageContext.request.contextPath}/home"><button type="button" class="btn btn-outline-secondary mt-1 ms-5">Return</button></a>

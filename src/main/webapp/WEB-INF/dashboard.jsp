@@ -1,4 +1,4 @@
-<%@ page import="io.tasktrace.tasktrace.models.User" %><%--
+<%@ page import="io.tasktrace.tasktrace.entities.User" %><%--
   Created by IntelliJ IDEA.
   User: alfredops
   Date: 10/4/23
@@ -26,13 +26,11 @@
     <a href="${pageContext.request.contextPath}/home" class="text-decoration-none">
         <p class="text-white fs-5 pt-3 ps-2">TaskTrace</p>
     </a>
+    <%if(user != null){%>
+        <p class="text-white fs-4 pt-3 ps-2">Welcome, <%=user.getFirstName()%></p>
+    <%}%>
     <img src="${pageContext.request.contextPath}/resources/images/icons/account.svg" alt="account icon" class="icon me-3">
 </header>
-<% if(user != null){ %>
-    <h1><%=user.getFullName()%></h1>
-<% } else { %>
-    <h1>Is not working properly</h1>
-<%}%>
 <section class="dashboard__resume d-flex align-items-center justify-content-evenly mt-5">
     <div>
         <h4>Overdue</h4>
@@ -78,16 +76,6 @@
                 <td>10/06/2023</td>
                 <td>Work</td>
                 <td>Got a Job</td>
-                <td>Wrote, Build, Deploy , Check</td>
-            </tr>
-            <tr class="">
-                <th scope="row">1</th>
-                <td>Delete / Complete</td>
-                <td>Finish this Project</td>
-                <td>High</td>
-                <td>10/06/2023</td>
-                <td>Work</td>
-                <td>Wrote, Build, Deploy , Check</td>
             </tr>
             </tbody>
         </table>
