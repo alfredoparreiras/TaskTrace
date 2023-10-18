@@ -57,6 +57,7 @@ public class TaskRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD))
         {
+            //TODO: Maybe I don't need to get the user here again and get it just when I create my Task Repo.
             User user = (User)session.getAttribute("loggedUser");
             if(user != null){
 
@@ -99,19 +100,51 @@ public class TaskRepository {
         }
     }
 
+    public boolean updateTask(UUID taskId, Task task) throws ClassNotFoundException, SQLException
+    {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD))
+        {
+            String query = "UPDATE tasktrace.Task" +
+                           "SET title = ?, description = ?, due_date = ?, priority = ?, " +
+                           "created_at = ?, updated_at = CURRENT_TIMESTAMP, is_done = ?" +
+                           "WHERE id = ?";
+
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, task.getTitle());
+            statement.setString(2,task.getDescription());
+            statement.setTimestamp(3, Timestamp.valueOf(task.getDueDate()));
+            statement.setString(4, task.getPriority().toString());
+            statement.setTimestamp(5,Timestamp.valueOf(task.getCreatedAt()));
+            statement.setBoolean(6, task.getIsDone());
+            statement.setString(7,task.getId().toString());
+
+
+            int rowsAffect = statement.executeUpdate();
+            if(rowsAffect > 0)
+                return true;
+
+            if(rowsAffect == 0)
+                throw new SQLException("Failled to updated Task with ID:" + taskId);
+            return false;
+
+        }
+    }
+
 
     private Task readNextUser(ResultSet resultSet) throws SQLException {
         String id = resultSet.getString("task_id");
-        String name = resultSet.getString("title");
+        String title = resultSet.getString("title");
         String description = resultSet.getString("description");
         LocalDateTime dueDate = resultSet.getObject("due_date", LocalDateTime.class);
         Priority priority = Priority.valueOf(resultSet.getString("priority"));
+        int user_id = resultSet.getInt("user_id");
         LocalDateTime createdAt = resultSet.getObject("created_at", LocalDateTime.class);
         LocalDateTime updatedAt = resultSet.getObject("updated_at", LocalDateTime.class);
         Boolean isDone = resultSet.getBoolean("is_done");
 
 
-        return new Task(id,name,description,dueDate,priority,createdAt,updatedAt,isDone );
+        return new Task(id,title,description,dueDate,priority, user_id,createdAt,updatedAt,isDone );
 
     }
 

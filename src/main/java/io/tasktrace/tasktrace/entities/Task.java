@@ -10,6 +10,7 @@ public class Task {
     private String description;
     private LocalDateTime dueDate;
     private Priority priority;
+    private Integer user_id;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Boolean isDone;
@@ -18,30 +19,30 @@ public class Task {
     //Constructors
 
 
-    public Task(String name, String description, LocalDateTime dueDate, Priority priority, LocalDateTime createdAt, LocalDateTime updatedAt, Boolean isDone) {
+    public Task(String title, String description, LocalDateTime dueDate, Priority priority, int user_id) {
         this.id = UUID.randomUUID();
-        this.title = Objects.requireNonNull(name, "Name cannot be null.");
+        this.title = Objects.requireNonNull(title, "Name cannot be null.");
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.user_id = user_id;
         this.isDone = false;
     }
 
-    public Task(String id, String name, String description, LocalDateTime dueDate, Priority priority, LocalDateTime createdAt, LocalDateTime updatedAt, Boolean isDone) {
+    public Task(String id, String name, String description, LocalDateTime dueDate, Priority priority,int user_id ,LocalDateTime createdAt, LocalDateTime updatedAt, Boolean isDone) {
         this.id = UUID.fromString(id);
         this.title = Objects.requireNonNull(name, "Name cannot be null.");
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
+        this.user_id = user_id;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.isDone = false;
     }
 
     public Task(Task task){
-        this(task.getId().toString(), task.getTitle(), task.getDescription(),task.getDueDate(), task.getPriority(), task.getCreatedAt(), task.getUpdatedAt(), task.getIsDone());
+        this(task.getId().toString(), task.getTitle(), task.getDescription(),task.getDueDate(), task.getPriority(),task.getUserId(), task.getCreatedAt(), task.getUpdatedAt(), task.getIsDone());
     }
 
 
@@ -55,6 +56,11 @@ public class Task {
     public Priority getPriority() {
         return priority;
     }
+
+    public Integer getUserId() {
+        return user_id;
+    }
+
     public LocalDateTime getDueDate() {
         return dueDate;
     }
@@ -93,6 +99,10 @@ public class Task {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public void setUserId(Integer user_id) {
+        this.user_id = user_id;
     }
 
     // Methods
