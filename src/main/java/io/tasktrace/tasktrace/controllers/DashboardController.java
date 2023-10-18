@@ -15,6 +15,12 @@ import java.sql.SQLException;
 @WebServlet(name="DashboardController", urlPatterns = {"/dashboard"})
 public class DashboardController extends HttpServlet {
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request,response);
+
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         try{
@@ -24,6 +30,14 @@ public class DashboardController extends HttpServlet {
             //Retrieving a Session
             HttpSession session = request.getSession(true);
             session.setAttribute("loggedUser", loggedUser);
+
+            // Retrieve tasks
+
+            // Calculate Stats
+
+            // Store information
+
+            // Redirect the route
 
             request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request,response);
 

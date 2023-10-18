@@ -48,7 +48,7 @@
 <section class="dashboard__tasks d-flex flex-column align-items-center mt-10">
     <div style="display: flex; flex-direction: column; width: 85%;">
         <div style="display: flex; justify-content: flex-end;">
-            <button type="button" class="btn btn-outline-primary mb-2">Add Task</button>
+            <a href="${pageContext.request.contextPath}/addTask"><button type="button" class="btn btn-outline-primary mb-2">Add Task</button></a>
         </div>
         <table class="table table-hover">
             <thead>
