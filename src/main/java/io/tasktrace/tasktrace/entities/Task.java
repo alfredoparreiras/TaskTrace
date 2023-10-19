@@ -1,5 +1,6 @@
 package io.tasktrace.tasktrace.entities;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -8,7 +9,7 @@ public class Task {
     private final UUID id;
     private String title;
     private String description;
-    private LocalDateTime dueDate;
+    private LocalDate dueDate;
     private Priority priority;
     private Integer user_id;
     private LocalDateTime createdAt;
@@ -19,7 +20,7 @@ public class Task {
     //Constructors
 
 
-    public Task(String title, String description, LocalDateTime dueDate, Priority priority, int user_id) {
+    public Task(String title, String description, LocalDate dueDate, Priority priority, int user_id) {
         this.id = UUID.randomUUID();
         this.title = Objects.requireNonNull(title, "Name cannot be null.");
         this.description = description;
@@ -29,7 +30,7 @@ public class Task {
         this.isDone = false;
     }
 
-    public Task(String id, String name, String description, LocalDateTime dueDate, Priority priority,int user_id ,LocalDateTime createdAt, LocalDateTime updatedAt, Boolean isDone) {
+    public Task(String id, String name, String description, LocalDate dueDate, Priority priority,int user_id ,LocalDateTime createdAt, LocalDateTime updatedAt, Boolean isDone) {
         this.id = UUID.fromString(id);
         this.title = Objects.requireNonNull(name, "Name cannot be null.");
         this.description = description;
@@ -61,7 +62,7 @@ public class Task {
         return user_id;
     }
 
-    public LocalDateTime getDueDate() {
+    public LocalDate getDueDate() {
         return dueDate;
     }
     public Boolean getIsDone(){return isDone;};
@@ -83,7 +84,7 @@ public class Task {
     public void setPriority(Priority priority) {
         this.priority = priority;
     }
-    public void setDueDate(LocalDateTime dueDate) {
+    public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
     public void setDescription(String description) {

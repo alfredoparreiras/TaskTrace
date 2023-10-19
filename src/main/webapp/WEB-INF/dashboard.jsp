@@ -1,4 +1,12 @@
-<%@ page import="io.tasktrace.tasktrace.entities.User" %><%--
+<%@ page import="io.tasktrace.tasktrace.entities.User" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="io.tasktrace.tasktrace.entities.Task" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="io.tasktrace.tasktrace.utils.DateConversionToString" %>
+<%@ page import="io.tasktrace.tasktrace.repositories.TaskRepository" %>
+<%@ page import="java.sql.SQLException" %><%--
   Created by IntelliJ IDEA.
   User: alfredops
   Date: 10/4/23
@@ -7,7 +15,37 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
+    //Defining Initial Variables
     User user = (User)session.getAttribute("loggedUser");
+    Map<String,Integer> stats = (Map<String, Integer>) request.getAttribute("stats");
+    List<Task> tasks = null;
+
+    if(user != null) {
+        // Retrieve tasks
+        TaskRepository taskRepository = new TaskRepository(user);
+        try {
+            tasks = taskRepository.getAllTasks();
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    String overdue = null;
+    String ongoing = null;
+    String complete = null;
+
+    int index = 0;
+
+    //Checking if Stats has value and saving them.
+    if(stats != null)
+    {
+        overdue = String.valueOf(stats.get("overdue"));
+        ongoing = String.valueOf(stats.get("ongoing"));
+        complete = String.valueOf(stats.get("complete"));
+    }
+
+
+    Map<String, List<String>> taskCategory = (Map<String,List<String>>) request.getAttribute("categoryByTask");
+
 %>
 
 <html>
@@ -32,18 +70,36 @@
     <img src="${pageContext.request.contextPath}/resources/images/icons/account.svg" alt="account icon" class="icon me-3">
 </header>
 <section class="dashboard__resume d-flex align-items-center justify-content-evenly mt-5">
+    <%if(stats != null){%>
+        <div>
+            <h4>Overdue</h4>
+            <p  class="text-center text-danger fw-bold fs-3"><%=overdue%></p>
+        </div>
+        <div>
+            <h4>Ongoing</h4>
+            <p class="text-center fw-bold fs-3"><%=ongoing%></p>
+        </div>
+        <div>
+            <h4 class="">Complete</h4>
+            <p class="text-center text-success fw-bold fs-3"><%=complete%></p>
+        </div>
+    <%}else {%>
     <div>
         <h4>Overdue</h4>
-        <p  class="text-center text-danger fw-bold fs-3">7</p>
+        <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg"
+             alt="Icon that represents an Unknown symbol" class="w-25">
     </div>
     <div>
         <h4>Ongoing</h4>
-        <p class="text-center fw-bold fs-3">7</p>
+        <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg"
+             alt="Icon that represents an Unknown symbol" class="w-25">
     </div>
     <div>
         <h4 class="">Complete</h4>
-        <p class="text-center text-success fw-bold fs-3">7</p>
+        <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg"
+             alt="Icon that represents an Unknown symbol" class="w-25">
     </div>
+    <%}%>
 </section>
 <section class="dashboard__tasks d-flex flex-column align-items-center mt-10">
     <div style="display: flex; flex-direction: column; width: 85%;">
@@ -55,7 +111,7 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Action</th>
-                <th scope="col">Name</th>
+                <th scope="col">Title</th>
                 <th scope="col">Priority</th>
                 <th scope="col">Due Date</th>
                 <th scope="col">Category</th>
@@ -63,20 +119,44 @@
             </tr>
             </thead>
             <tbody class="table-group-divider">
-            <tr class="">
-                <th scope="row">1</th>
-                <td>
-                    <div class="btn-group-sm" role="group" aria-label="Basic mixed styles example">
-                        <button type="button" class="btn btn-danger">Delete</button>
-                        <button type="button" class="btn btn-success">Complete</button>
-                    </div>
-                </td>
-                <td>Finish this Project</td>
-                <td>High</td>
-                <td>10/06/2023</td>
-                <td>Work</td>
-                <td>Got a Job</td>
-            </tr>
+            <%if(tasks != null){ %>
+                <%for(Task task: tasks){%>
+                    <tr class="">
+                        <th scope="row"><%=index++%></th>
+                        <td>
+                            <div class="d-flex" role="group" aria-label="Basic mixed styles example">
+                                <form action="${pageContext.request.contextPath}/dashboard" method="get">
+                                    <input type="hidden" name="action" value="delete>">
+                                    <input type="hidden" name="task_id" value="<%=task.getId()%>">
+                                    <button type="submit" class="btn btn-danger me-3">Delete</button>
+                                </form>
+                                <%if(!task.getIsDone()){%>
+                                    <form action="${pageContext.request.contextPath}/dashboard" method="get">
+                                        <input type="hidden" name="action" value="done>">
+                                        <input type="hidden" name="task_id" value="<%=task.getId()%>">
+                                        <button type="submit" class="btn btn-success">Done</button>
+                                    </form>
+                                <%} else {%>
+                                    <form action="${pageContext.request.contextPath}/dashboard" method="get">
+                                        <input type="hidden" name="action" value="undo>">
+                                        <input type="hidden" name="task_id" value="<%=task.getId()%>">
+                                        <button type="submit" class="btn btn-warning">Undo</button>
+                                    </form>
+                                <%}%>
+                            </div>
+                        </td>
+                        <td><%=task.getTitle()%></td>
+                        <td><%=task.getPriority()%></td>
+                        <td><%=DateConversionToString.getFormattedDate(task.getDueDate(),"MM/dd/yyyy")%></td>
+                        <%if(taskCategory != null){%>
+                            <td><%=taskCategory.get(task.getId().toString()) %></td>
+                        <%}else {%>
+                            <td>No category</td>
+                        <%}%>
+                        <td><%=task.getDescription()%></td>
+                    </tr>
+                <%}%>
+            <%}%>
             </tbody>
         </table>
     </div>
