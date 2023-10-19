@@ -51,17 +51,24 @@
         </div>
         <div class="form-floating mt-3">
             <select class="form-select" aria-label="Default select example" id="category" name="categories" multiple>
-                <option value="1">High</option>
-                <option value="2">Medium</option>
-                <option value="3">Low</option>
+                <option value="work">Work</option>
+                <option value="personal">Personal</option>
+                <option value="health&fitness">Health & Fitness</option>
+                <option value="shopping">Shopping</option>
+                <option value="finance">Finance</option>
+                <option value="social">Social</option>
+                <option value="education">Education</option>
+                <option value="travel">Travel</option>
+                <option value="hobbies">Hobbies</option>
             </select>
             <label for="category">Category</label>
         </div>
         <div class="form-floating mt-3">
             <select class="form-select" aria-label="Default select example" id="priority" name="priority">
-                <option value="1">First</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
+                <option value="Urgent">Urgent</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
             </select>
             <label for="priority">Priority</label>
         </div>

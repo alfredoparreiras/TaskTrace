@@ -2,19 +2,19 @@ package io.tasktrace.tasktrace.repositories;
 
 import io.tasktrace.tasktrace.entities.Category;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class CategoryRepository {
     private final String JDBC_URL;
     private final String JDBC_USERNAME;
     private final String JDBC_PASSWORD;
 
-    public CategoryRepository(HttpServletRequest request) {
+    public CategoryRepository() {
         String databaseName = "tasktrace";
         this.JDBC_URL =  "jdbc:mysql://localhost:3306/" + databaseName;
         this.JDBC_USERNAME = "root";
@@ -27,23 +27,47 @@ public class CategoryRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
         {
-            String query = "SELECT * FROM tasktrace.Category";
+            String query = "SELECT * FROM Category";
 
             PreparedStatement statement = connection.prepareStatement(query);
             List<Category> categories= new ArrayList<>();
 
             ResultSet resultSet = statement.executeQuery();
+
             while(resultSet.next())
-                categories.add(ReadNextCategory(resultSet));
+                categories.add(readNextCategory(resultSet));
 
             if(categories.isEmpty())
                 throw new SQLException("Failed to retrieve Category List. ");
+
+            return categories;
+        }
+    }
+
+    public List<Category> getCategoriesByTask(UUID task_id) throws ClassNotFoundException, SQLException
+    {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
+        {
+            String query = "SELECT * FROM tasktrace.TaskCategory WHERE task_id = ?";
+
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1,task_id.toString());
+
+            List<Category> categories= new ArrayList<>();
+
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next())
+                categories.add(readNextCategory(resultSet));
+
+            if(categories.isEmpty())
+                throw new SQLException("Failed to retrieve Category List by Tasks. ");
 
             return null;
         }
     }
 
-    public boolean addCategory(String categoryName) throws ClassNotFoundException, SQLException
+    public Category addCategory(String categoryName) throws ClassNotFoundException, SQLException
     {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
@@ -57,12 +81,22 @@ public class CategoryRepository {
 
             int rowsAffected = statement.executeUpdate();
             if(rowsAffected > 0)
-                return true;
+                return new Category(getGeneratedId(statement), categoryName);
 
             if(rowsAffected == 0)
                 throw new SQLException("Failed in Add Category to DB.");
 
-            return false;
+            return null;
+        }
+    }
+
+    private Integer getGeneratedId(PreparedStatement statement) throws SQLException
+    {
+        try(ResultSet generatedKeys = statement.getGeneratedKeys())
+        {
+            if(generatedKeys.next())
+                return generatedKeys.getInt(1);
+            throw new SQLException("The category was created, but the generated ID could not be read.");
         }
     }
 
@@ -113,7 +147,8 @@ public class CategoryRepository {
         }
     }
 
-    private Category ReadNextCategory(ResultSet resultSet) throws SQLException {
+
+    private Category readNextCategory(ResultSet resultSet) throws SQLException {
         int category_id = resultSet.getInt("category_id");
         String name = resultSet.getString("name");
 

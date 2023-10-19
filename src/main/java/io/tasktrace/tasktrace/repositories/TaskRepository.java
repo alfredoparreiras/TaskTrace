@@ -3,10 +3,9 @@ package io.tasktrace.tasktrace.repositories;
 import io.tasktrace.tasktrace.entities.Priority;
 import io.tasktrace.tasktrace.entities.Task;
 import io.tasktrace.tasktrace.entities.User;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,25 +15,25 @@ public class TaskRepository {
     private final String JDBC_URL;
     private final String JDBC_USERNAME;
     private final String JDBC_PASSWORD;
-    private HttpSession session;
+    private final User user;
 
-    public TaskRepository(HttpServletRequest request) {
+    public TaskRepository(User user) {
         String databaseName = "tasktrace";
         this.JDBC_URL =  "jdbc:mysql://localhost:3306/" + databaseName;
         this.JDBC_USERNAME = "root";
         this.JDBC_PASSWORD = "19229094";
-        this.session = request.getSession(true);
+        this.user = user;
     }
 
-    public List<Task> getTasksByUser(String email) throws ClassNotFoundException , SQLException{
+    public List<Task> getAllTasks() throws ClassNotFoundException , SQLException{
         //Retrieving User from Session
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
         {
-            User user = (User)session.getAttribute("loggedUser");
             if(user != null)
             {
-                String query = "SELECT * FROM tasktrace.Task WHERE user_id=?";
+                String query = "SELECT * FROM tasktrace.Task WHERE user_id=? " +
+                               "ORDER BY created_at ASC";
 
                 PreparedStatement statement = connection.prepareStatement(query);
                 statement.setInt(1, Integer.parseInt(user.getId()));
@@ -57,8 +56,6 @@ public class TaskRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD))
         {
-            //TODO: Maybe I don't need to get the user here again and get it just when I create my Task Repo.
-            User user = (User)session.getAttribute("loggedUser");
             if(user != null){
 
             String query = "INSERT INTO tasktrace.Task (task_id, title, description, due_date, priority, user_id, created_at, updated_at, is_done) \n" +
@@ -68,7 +65,7 @@ public class TaskRepository {
             statement.setString(1,task.getId().toString());
             statement.setString(2, task.getTitle());
             statement.setString(3, task.getDescription());
-            statement.setTimestamp(4,Timestamp.valueOf(task.getDueDate()));
+            statement.setDate(4,Date.valueOf(task.getDueDate()));
             statement.setString(5, task.getPriority().toString());
             statement.setInt(6,Integer.parseInt(user.getId()));
             statement.setBoolean(7, task.getIsDone());
@@ -113,7 +110,7 @@ public class TaskRepository {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, task.getTitle());
             statement.setString(2,task.getDescription());
-            statement.setTimestamp(3, Timestamp.valueOf(task.getDueDate()));
+            statement.setDate(3, Date.valueOf(task.getDueDate()));
             statement.setString(4, task.getPriority().toString());
             statement.setTimestamp(5,Timestamp.valueOf(task.getCreatedAt()));
             statement.setBoolean(6, task.getIsDone());
@@ -136,7 +133,7 @@ public class TaskRepository {
         String id = resultSet.getString("task_id");
         String title = resultSet.getString("title");
         String description = resultSet.getString("description");
-        LocalDateTime dueDate = resultSet.getObject("due_date", LocalDateTime.class);
+        LocalDate dueDate = resultSet.getObject("due_date", LocalDate.class);
         Priority priority = Priority.valueOf(resultSet.getString("priority"));
         int user_id = resultSet.getInt("user_id");
         LocalDateTime createdAt = resultSet.getObject("created_at", LocalDateTime.class);
