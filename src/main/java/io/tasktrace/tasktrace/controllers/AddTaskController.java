@@ -69,7 +69,7 @@ public class AddTaskController extends HttpServlet {
                 }
 
                 // If all data is good, is going to save this task into DB.
-                taskAdded = taskRepository.addTask(new Task(titleParameter, decriptionParameter, dueDate, priority, Integer.parseInt(loggedUser.getId())));
+                taskAdded = taskRepository.addTask(new Task(titleParameter, decriptionParameter, dueDate, priority, Integer.parseInt(loggedUser.getId()), false));
 
                 // If task and category were properly created, we save this these two into TaskCategory DB ( many-to-many relationship )
                 if(taskAdded != null && categoryAdded != null)

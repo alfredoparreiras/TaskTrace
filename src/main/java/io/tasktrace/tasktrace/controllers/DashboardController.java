@@ -7,7 +7,6 @@ import io.tasktrace.tasktrace.entities.User;
 import io.tasktrace.tasktrace.repositories.CategoryRepository;
 import io.tasktrace.tasktrace.repositories.TaskCategoryRepository;
 import io.tasktrace.tasktrace.repositories.TaskRepository;
-import io.tasktrace.tasktrace.repositories.UserRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -60,11 +59,7 @@ public class DashboardController extends HttpServlet {
                 {
                     request.setAttribute("taskList", tasks);
                     Map<String, Integer> stats = calculateTasksStats(tasks);
-                    if(stats != null)
-                        request.setAttribute("stats",stats);
-                    else
-                        request.setAttribute("errorMessage", "An error has occurred during the calculation of the statistics." +
-                                " Please check your data or try again later.");
+                    request.setAttribute("stats",stats);
                 }
 
                 request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request,response);
@@ -75,7 +70,7 @@ public class DashboardController extends HttpServlet {
             }
     }
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             HttpSession session = request.getSession(true);
 
@@ -94,11 +89,13 @@ public class DashboardController extends HttpServlet {
                 task.setIsDone(true);
                 isActionFinish = taskRepository.updateTask(task);
             }
-            else
+            if(action.equals("undo") && task.getIsDone())
             {
                 task.setIsDone(false);
                 isActionFinish = taskRepository.updateTask(task);
             }
+            if(!isActionFinish)
+                request.setAttribute("errorMessage", "Something got wrong in update Task Status.");
             response.sendRedirect(request.getContextPath() + "/dashboard");
 
         } catch (ClassNotFoundException | SQLException e) {
@@ -106,7 +103,8 @@ public class DashboardController extends HttpServlet {
         }
     }
     @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
 
         try {
             HttpSession session = request.getSession(true);
@@ -128,17 +126,17 @@ public class DashboardController extends HttpServlet {
 
         for(Task task : tasks)
         {
-            if(task.getIsDone() == false && !task.getDueDate().isAfter(LocalDate.now()))
+            if(!task.getIsDone() && !task.getDueDate().isAfter(LocalDate.now()))
             {
                 overdue++;
             }
 
-            if(task.getIsDone() == false && !task.getDueDate().isBefore(LocalDate.now()))
+            if(!task.getIsDone() && !task.getDueDate().isBefore(LocalDate.now()))
             {
                 ongoing++;
             }
 
-            if(task.getIsDone() == true)
+            if(task.getIsDone())
             {
                 complete++;
             }

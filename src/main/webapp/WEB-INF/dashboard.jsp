@@ -112,44 +112,66 @@
             <tbody class="table-group-divider">
             <%if(tasks != null){ %>
                 <%for(Task task: tasks){%>
-                    <tr class="">
-                        <th scope="row"><%=index++%></th>
-                        <td>
-                            <div class="d-flex" role="group" aria-label="Basic mixed styles example">
-                                <form action="${pageContext.request.contextPath}/dashboard" method="get">
-                                    <input type="hidden" name="_method" value="delete">
-                                    <input type="hidden" name="task_id" value="<%=task.getId()%>">
-                                    <button type="submit" class="btn btn-danger me-3">Delete</button>
-                                </form>
-                                <%if(!task.getIsDone()){%>
+                    <%--If Task is complete we must change the row style.--%>
+                    <%if(task.getIsDone()){%>
+                        <tr class="text-decoration-line-through">
+                            <th scope="row"><%=index++%></th>
+                            <td>
+                                <div class="d-flex" role="group" aria-label="Basic mixed styles example">
+                                    <form action="${pageContext.request.contextPath}/dashboard" method="get">
+                                        <input type="hidden" name="_method" value="delete">
+                                        <input type="hidden" name="task_id" value="<%=task.getId()%>">
+                                        <button type="submit" class="btn btn-danger me-3">Delete</button>
+                                    </form>
+                                    <form action="${pageContext.request.contextPath}/dashboard" method="get">
+                                        <input type="hidden" name="_method" value="put">
+                                        <input type="hidden" name="action" value="undo">
+                                        <input type="hidden" name="task_id" value="<%=task.getId()%>">
+                                        <button type="submit" class="btn btn-warning">Undo</button>
+                                    </form>
+                                </div>
+                            </td>
+                            <td><%=task.getTitle()%></td>
+                            <td><%=String.valueOf(task.getIsDone())%></td>
+                            <td><%=DateConversionToString.getFormattedDate(task.getDueDate(),"MM/dd/yyyy")%></td>
+                            <%if(taskCategory != null){%>
+                            <td><%=taskCategory.get(task.getId().toString()) %></td>
+                            <%}else {%>
+                            <td>No category</td>
+                            <%}%>
+                            <td><%=task.getDescription()%></td>
+                        </tr>
+                    <%}else{%>
+                        <tr class="">
+                            <th scope="row"><%=index++%></th>
+                            <td>
+                                <div class="d-flex" role="group" aria-label="Basic mixed styles example">
+                                    <form action="${pageContext.request.contextPath}/dashboard" method="get">
+                                        <input type="hidden" name="_method" value="delete">
+                                        <input type="hidden" name="task_id" value="<%=task.getId()%>">
+                                        <button type="submit" class="btn btn-danger me-3">Delete</button>
+                                    </form>
                                     <form action="${pageContext.request.contextPath}/dashboard" method="get">
                                         <input type="hidden" name="_method" value="put">
                                         <input type="hidden" name="action" value="done">
                                         <input type="hidden" name="task_id" value="<%=task.getId()%>">
                                         <button type="submit" class="btn btn-success">Done</button>
                                     </form>
-                                <%} else {%>
-                                    <form action="${pageContext.request.contextPath}/dashboard" method="get">
-                                        <input type="hidden" name="_method Ho" value="put">
-                                        <input type="hidden" name="action" value="undo">
-                                        <input type="hidden" name="task_id" value="<%=task.getId()%>">
-                                        <button type="submit" class="btn btn-warning">Undo</button>
-                                    </form>
-                                <%}%>
-                            </div>
-                        </td>
-                        <td><%=task.getTitle()%></td>
-                        <td><%=task.getPriority()%></td>
-                        <td><%=DateConversionToString.getFormattedDate(task.getDueDate(),"MM/dd/yyyy")%></td>
-                        <%if(taskCategory != null){%>
+                                </div>
+                            </td>
+                            <td><%=task.getTitle()%></td>
+                            <td><%=String.valueOf(task.getIsDone())%></td>
+                            <td><%=DateConversionToString.getFormattedDate(task.getDueDate(),"MM/dd/yyyy")%></td>
+                            <%if(taskCategory != null){%>
                             <td><%=taskCategory.get(task.getId().toString()) %></td>
-                        <%}else {%>
+                            <%}else {%>
                             <td>No category</td>
-                        <%}%>
-                        <td><%=task.getDescription()%></td>
-                    </tr>
+                            <%}%>
+                            <td><%=task.getDescription()%></td>
+                        </tr>
+                    <%}%>
                 <%}%>
-            <%}%>
+                <%}%>
             </tbody>
         </table>
     </div>

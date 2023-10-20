@@ -16,7 +16,7 @@ public class Task {
     private Boolean isDone;
 
     //Constructors
-    public Task(String title, String description, LocalDate dueDate, Priority priority, int user_id)
+    public Task(String title, String description, LocalDate dueDate, Priority priority, int user_id, Boolean isDone)
     {
         this.id = UUID.randomUUID();
         this.title = Objects.requireNonNull(title, "Name cannot be null.");
@@ -24,7 +24,7 @@ public class Task {
         this.dueDate = dueDate;
         this.priority = priority;
         this.user_id = user_id;
-        this.isDone = false;
+        this.isDone = isDone;
     }
     public Task(String id, String name, String description, LocalDate dueDate, Priority priority,int user_id ,LocalDateTime createdAt, LocalDateTime updatedAt, Boolean isDone)
     {
@@ -36,7 +36,7 @@ public class Task {
         this.user_id = user_id;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.isDone = false;
+        this.isDone = isDone;
     }
     public Task(Task task)
     {
