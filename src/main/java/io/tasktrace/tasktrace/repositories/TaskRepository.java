@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.Objects;
 
 public class TaskRepository {
     private final String JDBC_URL;
@@ -22,7 +22,7 @@ public class TaskRepository {
         this.JDBC_URL =  "jdbc:mysql://localhost:3306/" + databaseName;
         this.JDBC_USERNAME = "root";
         this.JDBC_PASSWORD = "19229094";
-        this.user = user;
+        this.user = Objects.requireNonNull(user, "User must be logged.");
     }
 
     public List<Task> getAllTasks() throws ClassNotFoundException , SQLException{
@@ -30,8 +30,6 @@ public class TaskRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
         {
-            if(user != null)
-            {
                 String query = "SELECT * FROM tasktrace.Task WHERE user_id=? " +
                                "ORDER BY created_at ASC";
 
@@ -40,24 +38,39 @@ public class TaskRepository {
 
                 List<Task> tasks = new ArrayList<>();
                 ResultSet resultSet = statement.executeQuery();
-
                 while(resultSet.next())
-                    tasks.add(readNextUser(resultSet));
+                    tasks.add(readNextTask(resultSet));
 
                 if(tasks.size() == 0)
                     return null;
                 return tasks;
-            }
-            return null;
         }
     }
+    public Task getTaskById(String taskId) throws ClassNotFoundException, SQLException
+    {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
+        {
+            String query = "SELECT * FROM tasktrace.Task WHERE task_id=? ";
 
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, taskId);
+
+            Task task = null;
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next())
+                task = new Task(readNextTask(resultSet));
+
+            if(task == null)
+                throw new SQLException("Failed in retrieve Task from DB");
+
+            return task;
+        }
+    }
     public Task addTask(Task task) throws ClassNotFoundException , SQLException{
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD))
         {
-            if(user != null){
-
             String query = "INSERT INTO tasktrace.Task (task_id, title, description, due_date, priority, user_id, created_at, updated_at, is_done) \n" +
                            "VALUES (?,?,?,?,?,?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?);";
 
@@ -75,13 +88,9 @@ public class TaskRepository {
                 return new Task(task);
             else
                 throw new SQLException("Failled to create a Task");
-            }
         }
-
-        return null;
     }
-
-    public void deleteTask(UUID taskId) throws ClassNotFoundException, SQLException
+    public void deleteTask(String taskId) throws ClassNotFoundException, SQLException
     {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD))
@@ -89,23 +98,22 @@ public class TaskRepository {
             String query = "DELETE FROM tasktrace.Task WHERE task_id=?";
 
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, taskId.toString());
+            statement.setString(1, taskId);
 
             int rowsAffected = statement.executeUpdate();
             if(rowsAffected == 0)
                 throw new SQLException("Failed to Delete Task with ID: " + taskId.toString());
         }
     }
-
-    public boolean updateTask(UUID taskId, Task task) throws ClassNotFoundException, SQLException
+    public boolean updateTask(Task task) throws ClassNotFoundException, SQLException
     {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD))
         {
-            String query = "UPDATE tasktrace.Task" +
+            String query = "UPDATE tasktrace.Task " +
                            "SET title = ?, description = ?, due_date = ?, priority = ?, " +
-                           "created_at = ?, updated_at = CURRENT_TIMESTAMP, is_done = ?" +
-                           "WHERE id = ?";
+                           "created_at = ?, updated_at = CURRENT_TIMESTAMP, is_done = ? " +
+                           "WHERE task_id = ?";
 
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, task.getTitle());
@@ -122,14 +130,14 @@ public class TaskRepository {
                 return true;
 
             if(rowsAffect == 0)
-                throw new SQLException("Failled to updated Task with ID:" + taskId);
+                throw new SQLException("Failled to updated Task with ID:" + task.getId().toString());
             return false;
 
         }
     }
 
 
-    private Task readNextUser(ResultSet resultSet) throws SQLException {
+    private Task readNextTask(ResultSet resultSet) throws SQLException {
         String id = resultSet.getString("task_id");
         String title = resultSet.getString("title");
         String description = resultSet.getString("description");
@@ -139,7 +147,6 @@ public class TaskRepository {
         LocalDateTime createdAt = resultSet.getObject("created_at", LocalDateTime.class);
         LocalDateTime updatedAt = resultSet.getObject("updated_at", LocalDateTime.class);
         Boolean isDone = resultSet.getBoolean("is_done");
-
 
         return new Task(id,title,description,dueDate,priority, user_id,createdAt,updatedAt,isDone );
 

@@ -1,5 +1,4 @@
 package io.tasktrace.tasktrace.entities;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -16,11 +15,9 @@ public class Task {
     private LocalDateTime updatedAt;
     private Boolean isDone;
 
-
     //Constructors
-
-
-    public Task(String title, String description, LocalDate dueDate, Priority priority, int user_id) {
+    public Task(String title, String description, LocalDate dueDate, Priority priority, int user_id)
+    {
         this.id = UUID.randomUUID();
         this.title = Objects.requireNonNull(title, "Name cannot be null.");
         this.description = description;
@@ -29,8 +26,8 @@ public class Task {
         this.user_id = user_id;
         this.isDone = false;
     }
-
-    public Task(String id, String name, String description, LocalDate dueDate, Priority priority,int user_id ,LocalDateTime createdAt, LocalDateTime updatedAt, Boolean isDone) {
+    public Task(String id, String name, String description, LocalDate dueDate, Priority priority,int user_id ,LocalDateTime createdAt, LocalDateTime updatedAt, Boolean isDone)
+    {
         this.id = UUID.fromString(id);
         this.title = Objects.requireNonNull(name, "Name cannot be null.");
         this.description = description;
@@ -41,11 +38,10 @@ public class Task {
         this.updatedAt = updatedAt;
         this.isDone = false;
     }
-
-    public Task(Task task){
+    public Task(Task task)
+    {
         this(task.getId().toString(), task.getTitle(), task.getDescription(),task.getDueDate(), task.getPriority(),task.getUserId(), task.getCreatedAt(), task.getUpdatedAt(), task.getIsDone());
     }
-
 
     // Getters
     public UUID getId() {
@@ -57,11 +53,9 @@ public class Task {
     public Priority getPriority() {
         return priority;
     }
-
     public Integer getUserId() {
         return user_id;
     }
-
     public LocalDate getDueDate() {
         return dueDate;
     }
@@ -75,7 +69,6 @@ public class Task {
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
-
 
     // Setters
     public void setTitle(String title) {
@@ -93,27 +86,14 @@ public class Task {
     public void setIsDone(Boolean status){
         this.isDone = status;
     }
-
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-
     public void setUserId(Integer user_id) {
         this.user_id = user_id;
     }
 
-    // Methods
-    public Boolean doTask(){
-        if(getIsDone() == false)
-        {
-            setIsDone(true);
-            return true;
-        }
-        return false;
-
-    }
 }

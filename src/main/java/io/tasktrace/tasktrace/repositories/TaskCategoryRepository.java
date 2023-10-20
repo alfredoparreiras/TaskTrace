@@ -37,7 +37,7 @@ public class TaskCategoryRepository {
             if(taskCategories.isEmpty())
                 throw new SQLException("Failed to retrieve Category List by Tasks. ");
 
-            return null;
+            return taskCategories;
         }
     }
 

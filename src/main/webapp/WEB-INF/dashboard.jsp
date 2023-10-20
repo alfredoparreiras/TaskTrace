@@ -17,23 +17,18 @@
 <%
     //Defining Initial Variables
     User user = (User)session.getAttribute("loggedUser");
-    Map<String,Integer> stats = (Map<String, Integer>) request.getAttribute("stats");
     List<Task> tasks = null;
-
-    if(user != null) {
-        // Retrieve tasks
-        TaskRepository taskRepository = new TaskRepository(user);
-        try {
-            tasks = taskRepository.getAllTasks();
-        } catch (ClassNotFoundException | SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
     String overdue = null;
     String ongoing = null;
     String complete = null;
+    int index = 1;
 
-    int index = 0;
+    //Retrieving Data from Request.
+    Map<String,Integer> stats = (Map<String, Integer>) request.getAttribute("stats");
+    Map<String, List<String>> taskCategory = (Map<String,List<String>>) request.getAttribute("categoryByTask");
+
+    if(request.getAttribute("taskList") != null)
+        tasks = (List<Task>) request.getAttribute("taskList");
 
     //Checking if Stats has value and saving them.
     if(stats != null)
@@ -42,10 +37,6 @@
         ongoing = String.valueOf(stats.get("ongoing"));
         complete = String.valueOf(stats.get("complete"));
     }
-
-
-    Map<String, List<String>> taskCategory = (Map<String,List<String>>) request.getAttribute("categoryByTask");
-
 %>
 
 <html>
@@ -126,19 +117,21 @@
                         <td>
                             <div class="d-flex" role="group" aria-label="Basic mixed styles example">
                                 <form action="${pageContext.request.contextPath}/dashboard" method="get">
-                                    <input type="hidden" name="action" value="delete>">
+                                    <input type="hidden" name="_method" value="delete">
                                     <input type="hidden" name="task_id" value="<%=task.getId()%>">
                                     <button type="submit" class="btn btn-danger me-3">Delete</button>
                                 </form>
                                 <%if(!task.getIsDone()){%>
                                     <form action="${pageContext.request.contextPath}/dashboard" method="get">
-                                        <input type="hidden" name="action" value="done>">
+                                        <input type="hidden" name="_method" value="put">
+                                        <input type="hidden" name="action" value="done">
                                         <input type="hidden" name="task_id" value="<%=task.getId()%>">
                                         <button type="submit" class="btn btn-success">Done</button>
                                     </form>
                                 <%} else {%>
                                     <form action="${pageContext.request.contextPath}/dashboard" method="get">
-                                        <input type="hidden" name="action" value="undo>">
+                                        <input type="hidden" name="_method Ho" value="put">
+                                        <input type="hidden" name="action" value="undo">
                                         <input type="hidden" name="task_id" value="<%=task.getId()%>">
                                         <button type="submit" class="btn btn-warning">Undo</button>
                                     </form>

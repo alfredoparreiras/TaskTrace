@@ -26,53 +26,100 @@ import java.util.Map;
 @WebServlet(name="DashboardController", urlPatterns = {"/dashboard"})
 public class DashboardController extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request,response);
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String method = request.getParameter("_method");
+        if(method != null && method.equals("delete"))
+            doDelete(request,response);
+        else if(method != null && method.equals("put"))
+            doPut(request,response);
+        else
+            super.service(request,response);
 
     }
-
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        try{
+            // Retrieve tasks and Calculate all Stats
+            try {
+                HttpSession session = request.getSession(true);
+                User user = (User)session.getAttribute("loggedUser");
+                TaskRepository taskRepository = new TaskRepository(user);
+
+                List<Task> tasks = taskRepository.getAllTasks();
+
+                //Convert a List<Category> into a Map.
+                Map<Integer, String> categoryMap = getCategoriesMap();
+                //Process this List with a List of Categories by Task and create a Map with a TaskID and List of Categories.
+                Map<String, List<String>> categoriesByTask = getCategoriesByTask(categoryMap);
+
+                if(categoriesByTask != null)
+                    request.setAttribute("categoryByTask", categoriesByTask);
+
+                // Calculate Overall stats, if it are overdue, complete or ongoing.
+                if(tasks != null && !tasks.isEmpty())
+                {
+                    request.setAttribute("taskList", tasks);
+                    Map<String, Integer> stats = calculateTasksStats(tasks);
+                    if(stats != null)
+                        request.setAttribute("stats",stats);
+                    else
+                        request.setAttribute("errorMessage", "An error has occurred during the calculation of the statistics." +
+                                " Please check your data or try again later.");
+                }
+
+                request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request,response);
+
+            } catch (ClassNotFoundException | SQLException e) {
+                request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request,response);
+                throw new RuntimeException(e);
+            }
+    }
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
             HttpSession session = request.getSession(true);
-            UserRepository userRepository = new UserRepository();
-            User loggedUser =(User) session.getAttribute("loggedUser");
-            List<Task> tasks = null;
 
-            if(loggedUser != null){
-                // Retrieve tasks
-                TaskRepository taskRepository = new TaskRepository(loggedUser);
-                tasks = taskRepository.getAllTasks();
-                request.setAttribute("allTasks", tasks);
-            }
+            User user = (User)session.getAttribute("loggedUser");
 
-            //TODO: Need to improve this.
+            String action = request.getParameter("action");
+            String taskId = request.getParameter("task_id");
 
-            Map<Integer, String> categoryMap = getCategoriesMap();
-            Map<String, List<String>> categoriesByTask = getCategoriesByTask(categoryMap);
-            if(categoriesByTask != null)
-                request.setAttribute("categoryByTask", categoriesByTask);
+            TaskRepository taskRepository = new TaskRepository(user);
+            Task task = taskRepository.getTaskById(taskId);
 
-            // Calculate Stats
-            if(tasks != null && !tasks.isEmpty())
+            boolean isActionFinish = false;
+
+            if(action.equals("done") && !task.getIsDone())
             {
-                Map<String, Integer> stats = calculateTasksStats(tasks);
-                if(stats != null)
-                    request.setAttribute("stats",stats);
-                else
-                    request.setAttribute("errorMessage", "An error has occurred during the calculation of the statistics." +
-                                                " Please check your data or try again later.");
+                task.setIsDone(true);
+                isActionFinish = taskRepository.updateTask(task);
             }
+            else
+            {
+                task.setIsDone(false);
+                isActionFinish = taskRepository.updateTask(task);
+            }
+            response.sendRedirect(request.getContextPath() + "/dashboard");
 
-            // Redirect the route
-            request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request,response);
-
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
     }
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
+        try {
+            HttpSession session = request.getSession(true);
+            User user = (User)session.getAttribute("loggedUser");
+            String taskId = request.getParameter("task_id");
+            TaskRepository taskRepository = new TaskRepository(user);
+            taskRepository.deleteTask(taskId);
+            response.sendRedirect(request.getContextPath() + "/dashboard");
+
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     private Map<String, Integer> calculateTasksStats(List<Task> tasks)
     {
         int overdue = 0;
@@ -81,12 +128,12 @@ public class DashboardController extends HttpServlet {
 
         for(Task task : tasks)
         {
-            if(task.getIsDone() == false && task.getDueDate().isAfter(LocalDate.now()))
+            if(task.getIsDone() == false && !task.getDueDate().isAfter(LocalDate.now()))
             {
                 overdue++;
             }
 
-            if(task.getIsDone() == false && task.getDueDate().isBefore(LocalDate.now()))
+            if(task.getIsDone() == false && !task.getDueDate().isBefore(LocalDate.now()))
             {
                 ongoing++;
             }
@@ -104,8 +151,8 @@ public class DashboardController extends HttpServlet {
 
         return stats;
     }
-
-    private Map<Integer, String> getCategoriesMap() throws SQLException, ClassNotFoundException {
+    private Map<Integer, String> getCategoriesMap() throws SQLException, ClassNotFoundException
+    {
         CategoryRepository categoryRepository = new CategoryRepository();
         List<Category> categoryList = categoryRepository.getAllCategories();
         Map<Integer, String> categoryMap = new HashMap<>();
@@ -116,8 +163,8 @@ public class DashboardController extends HttpServlet {
             return null;
         return categoryMap;
     }
-
-    private Map<String, List<String>> getCategoriesByTask(Map<Integer,String> categoryMap) throws SQLException, ClassNotFoundException {
+    private Map<String, List<String>> getCategoriesByTask(Map<Integer,String> categoryMap) throws SQLException, ClassNotFoundException
+    {
         TaskCategoryRepository taskCategoryRepository = new TaskCategoryRepository();
         List<TaskCategory> allTaskCategories = taskCategoryRepository.getTaskCategories();
 
@@ -134,5 +181,4 @@ public class DashboardController extends HttpServlet {
         return null;
 
     }
-
 }

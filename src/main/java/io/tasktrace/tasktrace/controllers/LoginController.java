@@ -48,13 +48,20 @@ public class LoginController extends HttpServlet {
 
                 if(!validPassword(user,password)){
                     request.setAttribute("errorMessage", "Invalid password");
+                    request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
                 }
                 else
                 {
                     HttpSession session = request.getSession(true);
                     session.setAttribute("loggedUser", user);
-                    request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request,response);
+                    response.sendRedirect(request.getContextPath() + "/dashboard");
+                    return; //Terminate the method here, so it does not try to forward
                 }
+            }
+            else
+            {
+                request.setAttribute("errorMessage", "The user associated with this email does not exist.");
+                request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
             }
 
             request.getRequestDispatcher("WEB-INF/login.jsp").forward(request,response);
@@ -62,7 +69,7 @@ public class LoginController extends HttpServlet {
             // Log the exception
             e.printStackTrace();
             // Set an error message for the user
-
+            request.setAttribute("errorMessage", "An internal error occurred. Please try again later.");
             request.getRequestDispatcher("WEB-INF/login.jsp").forward(request,response);
         }
     }

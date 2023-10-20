@@ -31,33 +31,31 @@ public class AddTaskController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Retrieving Data from Request
-        String titleParameter = request.getParameter("title");
-        String decriptionParameter = request.getParameter("description");
-        String dueDateParameter = request.getParameter("dueDate");
-        String[] categoriesParameter = request.getParameterValues("categories");
-        String priorityParameter = request.getParameter("priority");
-
-        // Retrieving Session
-        HttpSession session = request.getSession(true);
-
-        // Local Variables
-        User loggedUser = (User) session.getAttribute("loggedUser");
-        Task taskAdded;
-        Category categoryAdded = null;
-        boolean isAllValid = false;
-
-        //Repositories
-        TaskRepository taskRepository = new TaskRepository(loggedUser);
-        TaskCategoryRepository taskCategoryRepository = new TaskCategoryRepository();
-        CategoryRepository categoryRepository = new CategoryRepository();
-
-        // Validate this and Parsing ( if necessary ) these Data.
-        LocalDate dueDate = parsingDueDate(dueDateParameter, request);
-        Priority priority = parsingPriority(priorityParameter, request);
-
-        // Send information to DB and Redirect
         try {
+            // Retrieving Data from Request
+            String titleParameter = request.getParameter("title");
+            String decriptionParameter = request.getParameter("description");
+            String dueDateParameter = request.getParameter("dueDate");
+            String[] categoriesParameter = request.getParameterValues("categories");
+            String priorityParameter = request.getParameter("priority");
+
+            // Retrieving Session
+            HttpSession session = request.getSession(true);
+
+            // Local Variables
+            User loggedUser = (User) session.getAttribute("loggedUser");
+            Task taskAdded;
+            Category categoryAdded = null;
+            boolean isAllValid = false;
+
+            //Repositories
+            TaskRepository taskRepository = new TaskRepository(loggedUser);
+            TaskCategoryRepository taskCategoryRepository = new TaskCategoryRepository();
+            CategoryRepository categoryRepository = new CategoryRepository();
+
+            // Validate this and Parsing ( if necessary ) these Data.
+            LocalDate dueDate = parsingDueDate(dueDateParameter, request);
+            Priority priority = parsingPriority(priorityParameter, request);
             // If user is not available, it's impossible to save a Task. So user need to log in again.
             if(validateAction(request, loggedUser, titleParameter) && (dueDate != null && priority != null))
             {
@@ -78,14 +76,16 @@ public class AddTaskController extends HttpServlet {
                      isAllValid = taskCategoryRepository.addTaskCategory(new TaskCategory(taskAdded.getId().toString(), categoryAdded.getId()));
 
                 if(isAllValid)
+                {
                     // Redirect to DashBoard if there is success
-                    request.getRequestDispatcher("WEB-INF/dashboard.jsp").forward(request,response);
+                    response.sendRedirect(request.getContextPath() + "/dashboard");
+                }
+                else
+                {
+                    request.setAttribute("errorMessage","Task creation failed. Please try again.");
+                    request.getRequestDispatcher("WEB-INF/addTask.jsp").forward(request,response);
+                }
             }
-
-            // Redirect to AddTask if there is error
-            request.setAttribute("errorMessage","Task creation failed. Please try again.");
-            request.getRequestDispatcher("WEB-INF/addTask.jsp").forward(request,response);
-
         } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
