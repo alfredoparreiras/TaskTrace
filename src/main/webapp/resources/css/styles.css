@@ -43,3 +43,25 @@
     width: 85% !important;
 }
 
+.w-35 {
+    width: 35% !important;
+}
+
+.large_screen_layout{
+    display: table;
+}
+
+.small_screen_layout {
+    display: none;
+}
+
+@media screen and (max-width: 768px){
+
+    .large_screen_layout {
+        display: none;
+    }
+
+    .small_screen_layout {
+        display: block
+    }
+}
