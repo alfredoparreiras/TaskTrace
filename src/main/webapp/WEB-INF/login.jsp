@@ -77,10 +77,17 @@
     </span>
       </div>
     </div>
-    <div class="mb-3 form-check mt-4">
-      <input type="checkbox" class="form-check-input" id="exampleCheck1" name="saveEmailCheckbox">
-      <label class="form-check-label" for="exampleCheck1">Save my email</label>
-    </div>
+    <%if(savedEmailCookie != null){%>
+      <div class="mb-3 form-check mt-4">
+        <input type="checkbox" class="form-check-input" id="saveEmailChecked" name="saveEmailCheckbox" checked>
+        <label class="form-check-label" for="saveEmailChecked">Save my email</label>
+      </div>
+    <%} else {%>
+      <div class="mb-3 form-check mt-4">
+        <input type="checkbox" class="form-check-input" id="saveEmail" name="saveEmailCheckbox" >
+        <label class="form-check-label" for="saveEmail">Save my email</label>
+      </div>
+    <%}%>
     <button type="submit" class="btn btn-primary mt-1">Submit</button>
     <a href="${pageContext.request.contextPath}/home"><button type="button" class="btn btn-outline-secondary mt-1 ms-5">Return</button></a>
   </form>

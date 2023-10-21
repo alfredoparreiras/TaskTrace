@@ -5,9 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import javax.xml.transform.Result;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class CategoryRepository {
     private final String JDBC_URL;
@@ -37,8 +35,27 @@ public class CategoryRepository {
             while(resultSet.next())
                 categories.add(readNextCategory(resultSet));
 
-            if(categories.isEmpty())
-                throw new SQLException("Failed to retrieve Category List. ");
+            return categories;
+        }
+    }
+
+    public Map<Integer,String> mapCategories() throws ClassNotFoundException, SQLException
+    {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
+        {
+            String query = "SELECT * FROM Category";
+
+            PreparedStatement statement = connection.prepareStatement(query);
+            Map<Integer,String> categories = new HashMap<>();
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while(resultSet.next())
+            {
+                Category category = readNextCategory(resultSet);
+                categories.put(category.getId(),category.getCategory());
+            }
 
             return categories;
         }

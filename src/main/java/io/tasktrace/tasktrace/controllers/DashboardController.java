@@ -165,12 +165,11 @@ public class DashboardController extends HttpServlet {
     {
         TaskCategoryRepository taskCategoryRepository = new TaskCategoryRepository();
         List<TaskCategory> allTaskCategories = taskCategoryRepository.getTaskCategories();
-
         Map<String, List<String>> categoryByTask = new HashMap<>();
+        List<String> categories = new ArrayList<>();
+
         for(TaskCategory taskCategory : allTaskCategories)
             if(categoryMap.containsKey(taskCategory.getCategory_id())) {
-
-                List<String> categories = new ArrayList<>();
                 categories.add(categoryMap.get(taskCategory.getCategory_id()));
                 categoryByTask.put(taskCategory.getTask_id(), categories );
             }

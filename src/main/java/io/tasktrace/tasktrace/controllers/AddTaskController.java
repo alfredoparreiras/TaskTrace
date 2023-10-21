@@ -19,7 +19,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet(name = "AddTaskController", urlPatterns = {"/addTask"})
 public class AddTaskController extends HttpServlet {
@@ -59,21 +61,30 @@ public class AddTaskController extends HttpServlet {
             // If user is not available, it's impossible to save a Task. So user need to log in again.
             if(validateAction(request, loggedUser, titleParameter) && (dueDate != null && priority != null))
             {
-                // Retrieve all categories and check if this category already exists in DB.
-                List<Category> actualCategories = categoryRepository.getAllCategories();
-                for(String category : categoriesParameter)
-                {
-                    // If not exists, will be saved and returned this new category.
-                    if(!actualCategories.contains(category))
-                        categoryAdded = categoryRepository.addCategory(category);
-                }
-
                 // If all data is good, is going to save this task into DB.
                 taskAdded = taskRepository.addTask(new Task(titleParameter, decriptionParameter, dueDate, priority, Integer.parseInt(loggedUser.getId()), false));
 
-                // If task and category were properly created, we save this these two into TaskCategory DB ( many-to-many relationship )
-                if(taskAdded != null && categoryAdded != null)
-                     isAllValid = taskCategoryRepository.addTaskCategory(new TaskCategory(taskAdded.getId().toString(), categoryAdded.getId()));
+                // Retrieve all categories and check if this category already exists in DB.
+                Map<Integer,String> allCategoriesFromDB = categoryRepository.mapCategories();
+                for(String categoryParameter : categoriesParameter)
+                {
+                    if(!allCategoriesFromDB.containsValue(categoryParameter))
+                        categoryAdded = categoryRepository.addCategory(categoryParameter);
+
+                    Integer keyForCategory = null;
+                    for (Map.Entry<Integer, String> entry : allCategoriesFromDB.entrySet()) {
+                        if (entry.getValue().equals(categoryParameter)) {
+                            keyForCategory = entry.getKey();
+                            break;
+                        }
+                    }
+
+                    // If task and category were properly created, we save this these two into TaskCategory DB ( many-to-many relationship )
+                    if(taskAdded != null)
+                        isAllValid = taskCategoryRepository.addTaskCategory(new TaskCategory(taskAdded.getId().toString(), keyForCategory));
+
+                }
+
 
                 if(isAllValid)
                 {

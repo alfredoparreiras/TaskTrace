@@ -6,7 +6,8 @@
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="io.tasktrace.tasktrace.utils.DateConversionToString" %>
 <%@ page import="io.tasktrace.tasktrace.repositories.TaskRepository" %>
-<%@ page import="java.sql.SQLException" %><%--
+<%@ page import="java.sql.SQLException" %>
+<%@ page import="io.tasktrace.tasktrace.utils.StringUtils" %><%--
   Created by IntelliJ IDEA.
   User: alfredops
   Date: 10/4/23
@@ -53,43 +54,47 @@
 <body>
 <header class="header bg-primary d-flex align-items-center justify-content-between">
     <a href="${pageContext.request.contextPath}/home" class="text-decoration-none">
-        <p class="text-white fs-5 pt-3 ps-2">TaskTrace</p>
+        <p class="text-white fs-5 pt-3 ps-3">TaskTrace</p>
     </a>
     <%if(user != null){%>
-        <p class="text-white fs-4 pt-3 ps-2">Welcome, <%=user.getFirstName()%></p>
+        <p class="text-white fs-4 pt-3">Welcome, <%=user.getFirstName()%></p>
     <%}%>
     <img src="${pageContext.request.contextPath}/resources/images/icons/account.svg" alt="account icon" class="icon me-3">
 </header>
-<section class="dashboard__resume d-flex align-items-center justify-content-evenly mt-5">
+<section class="dashboard__resume mt-5">
     <%if(stats != null){%>
-        <div>
-            <h4>Overdue</h4>
-            <p  class="text-center text-danger fw-bold fs-3"><%=overdue%></p>
-        </div>
-        <div>
-            <h4>Ongoing</h4>
-            <p class="text-center fw-bold fs-3"><%=ongoing%></p>
-        </div>
-        <div>
-            <h4 class="">Complete</h4>
-            <p class="text-center text-success fw-bold fs-3"><%=complete%></p>
-        </div>
+       <div class="d-flex align-items-center justify-content-evenly">
+           <div>
+               <h4>Overdue</h4>
+               <p  class="text-center text-danger fw-bold fs-3"><%=overdue%></p>
+           </div>
+           <div>
+               <h4>Ongoing</h4>
+               <p class="text-center fw-bold fs-3"><%=ongoing%></p>
+           </div>
+           <div>
+               <h4 class="">Complete</h4>
+               <p class="text-center text-success fw-bold fs-3"><%=complete%></p>
+           </div>
+       </div>
     <%}else {%>
-    <div>
-        <h4>Overdue</h4>
-        <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg"
-             alt="Icon that represents an Unknown symbol" class="w-25">
-    </div>
-    <div>
-        <h4>Ongoing</h4>
-        <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg"
-             alt="Icon that represents an Unknown symbol" class="w-25">
-    </div>
-    <div>
-        <h4 class="">Complete</h4>
-        <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg"
-             alt="Icon that represents an Unknown symbol" class="w-25">
-    </div>
+        <div class="d-flex align-items-center justify-content-evenly">
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <h4>Overdue</h4>
+                <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg"
+                     alt="Icon that represents an Unknown symbol" class="w-25">
+            </div>
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <h4>Ongoing</h4>
+                <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg"
+                     alt="Icon that represents an Unknown symbol" class="w-25">
+            </div>
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <h4 class="">Complete</h4>
+                <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg"
+                     alt="Icon that represents an Unknown symbol" class="w-25">
+            </div>
+        </div>
     <%}%>
 </section>
 <section class="dashboard__tasks d-flex flex-column align-items-center mt-10">
@@ -100,13 +105,13 @@
         <table class="table table-hover">
             <thead>
             <tr>
-                <th scope="col">#</th>
+                <th scope="col">Id</th>
                 <th scope="col">Action</th>
                 <th scope="col">Title</th>
-                <th scope="col">Priority</th>
-                <th scope="col">Due Date</th>
-                <th scope="col">Category</th>
                 <th scope="col">Description</th>
+                <th scope="col">Priority</th>
+                <th scope="col">Category</th>
+                <th scope="col">Due Date</th>
             </tr>
             </thead>
             <tbody class="table-group-divider">
@@ -115,9 +120,9 @@
                     <%--If Task is complete we must change the row style.--%>
                     <%if(task.getIsDone()){%>
                         <tr class="text-decoration-line-through">
-                            <th scope="row"><%=index++%></th>
-                            <td>
-                                <div class="d-flex" role="group" aria-label="Basic mixed styles example">
+                            <th class="align-middle" scope="row"><%=index++%></th>
+                            <td class="align-middle">
+                                <div class="d-flex pt-3" role="group" aria-label="Basic mixed styles example">
                                     <form action="${pageContext.request.contextPath}/dashboard" method="get">
                                         <input type="hidden" name="_method" value="delete">
                                         <input type="hidden" name="task_id" value="<%=task.getId()%>">
@@ -131,21 +136,22 @@
                                     </form>
                                 </div>
                             </td>
-                            <td><%=task.getTitle()%></td>
-                            <td><%=String.valueOf(task.getIsDone())%></td>
-                            <td><%=DateConversionToString.getFormattedDate(task.getDueDate(),"MM/dd/yyyy")%></td>
+                            <td class="align-middle"><%=task.getTitle()%></td>
+                            <td class="align-middle"><%=task.getDescription()%></td>
+                            <td class="align-middle"><%=StringUtils.toCapitalCase(task.getPriority().toString())%></td>
                             <%if(taskCategory != null){%>
-                            <td><%=taskCategory.get(task.getId().toString()) %></td>
+                                <td class="align-middle"><%=taskCategory.get(task.getId().toString()) %></td>
                             <%}else {%>
-                            <td>No category</td>
+                                <td class="align-middle">No category</td>
                             <%}%>
-                            <td><%=task.getDescription()%></td>
+                            <td class="align-middle"><%=DateConversionToString.getFormattedDate(task.getDueDate(),"EEE, dd MMM yyyy")%></td>
+
                         </tr>
                     <%}else{%>
                         <tr class="">
-                            <th scope="row"><%=index++%></th>
-                            <td>
-                                <div class="d-flex" role="group" aria-label="Basic mixed styles example">
+                            <th class="align-middle" scope="row"><%=index++%></th>
+                            <td class="align-middle">
+                                <div class="d-flex pt-3" role="group" aria-label="Basic mixed styles example">
                                     <form action="${pageContext.request.contextPath}/dashboard" method="get">
                                         <input type="hidden" name="_method" value="delete">
                                         <input type="hidden" name="task_id" value="<%=task.getId()%>">
@@ -159,15 +165,15 @@
                                     </form>
                                 </div>
                             </td>
-                            <td><%=task.getTitle()%></td>
-                            <td><%=String.valueOf(task.getIsDone())%></td>
-                            <td><%=DateConversionToString.getFormattedDate(task.getDueDate(),"MM/dd/yyyy")%></td>
+                            <td class="align-middle" class=""><%=task.getTitle()%></td>
+                            <td class="align-middle"><%=task.getDescription()%></td>
+                            <td class="align-middle"><%=StringUtils.toCapitalCase(task.getPriority().toString())%></td>
                             <%if(taskCategory != null){%>
-                            <td><%=taskCategory.get(task.getId().toString()) %></td>
+                            <td class="align-middle"><%=taskCategory.get(task.getId().toString()) %></td>
                             <%}else {%>
-                            <td>No category</td>
+                            <td class="align-middle">No category</td>
                             <%}%>
-                            <td><%=task.getDescription()%></td>
+                            <td class="align-middle"><%=DateConversionToString.getFormattedDate(task.getDueDate(),"EEE, dd MMM yyyy")%></td>
                         </tr>
                     <%}%>
                 <%}%>

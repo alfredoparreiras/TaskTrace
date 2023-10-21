@@ -18,13 +18,20 @@
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/icons/addTask.svg" type="image/svg">
     <script>
         window.onload = function() {
+            //Setting  Date as Today.
             var date = new Date(); // gets the current date
             var day = ("0" + date.getDate()).slice(-2); // format day to two digits
             var month = ("0" + (date.getMonth() + 1)).slice(-2); // format month to two digits
             var today = date.getFullYear()+"-"+(month)+"-"+(day) ; // concatenate the year, month and day
-
             document.getElementById("dueDate").value = today; // sets 'today' as the value for 'dueDate'
+
+            //Setting Select's Height
+            var selectElement = document.getElementById("category");
+            var numberOfOptions = selectElement.options.length;
+
+            selectElement.size = numberOfOptions;
         }
+
     </script>
 </head>
 <body class="d-flex flex-column">
@@ -49,20 +56,18 @@
             <input type="date" class="form-control" id="dueDate" placeholder="Due Date" name="dueDate">
             <label for="dueDate">Due Date</label>
         </div>
-        <div class="form-floating mt-3">
-            <select class="form-select" aria-label="Default select example" id="category" name="categories" multiple>
-                <option value="work">Work</option>
-                <option value="personal">Personal</option>
-                <option value="health&fitness">Health & Fitness</option>
-                <option value="shopping">Shopping</option>
-                <option value="finance">Finance</option>
-                <option value="social">Social</option>
-                <option value="education">Education</option>
-                <option value="travel">Travel</option>
-                <option value="hobbies">Hobbies</option>
-            </select>
-            <label for="category">Category</label>
-        </div>
+        <label class="my-2" for="category">Category</label>
+        <select class="form-select" aria-label="Default select example" id="category" name="categories" multiple>
+            <option value="work">Work</option>
+            <option value="personal">Personal</option>
+            <option value="health&fitness">Health & Fitness</option>
+            <option value="shopping">Shopping</option>
+            <option value="finance">Finance</option>
+            <option value="social">Social</option>
+            <option value="education">Education</option>
+            <option value="travel">Travel</option>
+            <option value="hobbies">Hobbies</option>
+        </select>
         <div class="form-floating mt-3">
             <select class="form-select" aria-label="Default select example" id="priority" name="priority">
                 <option value="Urgent">Urgent</option>
