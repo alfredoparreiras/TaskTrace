@@ -53,21 +53,27 @@
         </div>
     </div>
     <%} else {%>
-    <div class="d-flex align-items-center justify-content-evenly w-25">
-        <div class="d-flex flex-column justify-content-center align-items-center">
-            <h4>Overdue</h4>
-            <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg"
-                 alt="Icon that represents an Unknown symbol" class="w-25">
+    <div class="d-flex flex-column">
+        <div class="mb-2">
+            <h5>Overdue :
+                <span class="text-danger fw-bold fs-3">
+                    <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg" alt="Icon that represents an Unknown symbol" class="w-5 align-self-center">
+                </span>
+            </h5>
         </div>
-        <div class="d-flex flex-column justify-content-center align-items-center">
-            <h4>Ongoing</h4>
-            <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg"
-                 alt="Icon that represents an Unknown symbol" class="w-25">
+        <div class="mb-2">
+            <h5>Ongoing :
+                <span class="fw-bold fs-3">
+                    <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg" alt="Icon that represents an Unknown symbol" class="w-5 align-self-center">
+                </span>
+            </h5>
         </div>
-        <div class="d-flex flex-column justify-content-center align-items-center">
-            <h4 class="">Complete</h4>
-            <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg"
-                 alt="Icon that represents an Unknown symbol" class="w-25">
+        <div class="mb-2">
+            <h5 class="">Complete :
+                <span class="text-center text-success fw-bold fs-3">
+                    <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg" alt="Icon that represents an Unknown symbol" class="w-5 align-self-center">
+                </span>
+            </h5>
         </div>
     </div>
     <%}%>

@@ -47,6 +47,13 @@
     width: 35% !important;
 }
 
+.w-10 {
+    width: 10% !important;
+}
+
+.w-5 {
+    width: 5% !important;
+}
 .large_screen_layout{
     display: table;
 }

@@ -143,7 +143,8 @@
           <p class="fw-bold">Category</p>
           <%if (taskCategory != null) {%>
             <%
-              List<String> displayCategories = taskCategory.get(taskList.getId());
+              List<String> displayCategories = new ArrayList<>();
+              displayCategories = taskCategory.get(taskList.getId().toString());
             %>
             <%if (displayCategories != null) {%>
               <%for (String category : displayCategories) {%>
@@ -181,7 +182,8 @@
       <p class="fw-bold">Category</p>
       <%if (taskCategory != null) {%>
         <%
-          List<String> displayCategories = taskCategory.get(taskList.getId());
+          List<String> displayCategories = new ArrayList<>();
+          displayCategories = taskCategory.get(taskList.getId().toString());
         %>
           <%if (displayCategories != null) {%>
             <%for (String category : displayCategories) {%>
