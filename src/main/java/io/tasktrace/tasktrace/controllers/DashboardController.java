@@ -158,6 +158,7 @@ public class DashboardController extends HttpServlet {
             categoryMap.put(category.getId(), category.getCategory());
 
         if(categoryMap.isEmpty())
+            //TODO: don't return null in case of a collection. Its better to return empty.
             return null;
         return categoryMap;
     }
@@ -165,14 +166,25 @@ public class DashboardController extends HttpServlet {
     {
         TaskCategoryRepository taskCategoryRepository = new TaskCategoryRepository();
         List<TaskCategory> allTaskCategories = taskCategoryRepository.getTaskCategories();
-        Map<String, List<String>> categoryByTask = new HashMap<>();
-        List<String> categories = new ArrayList<>();
 
-        for(TaskCategory taskCategory : allTaskCategories)
+        Map<String, List<String>> categoryByTask = new HashMap<>();
+
+        for(TaskCategory taskCategory : allTaskCategories){
             if(categoryMap.containsKey(taskCategory.getCategory_id())) {
-                categories.add(categoryMap.get(taskCategory.getCategory_id()));
-                categoryByTask.put(taskCategory.getTask_id(), categories );
+                if(categoryByTask.containsKey(taskCategory.getTask_id()))
+                {
+                    List<String> categories = categoryByTask.get(taskCategory.getTask_id());
+                    categories.add(categoryMap.get(taskCategory.getCategory_id()));
+                }
+                else
+                {
+                    List<String> categories = new ArrayList<>();
+                    categoryByTask.put(taskCategory.getTask_id(), categories );
+                    categories.add(categoryMap.get(taskCategory.getCategory_id()));
+                }
             }
+        }
+
         if(!categoryByTask.isEmpty())
             return categoryByTask;
         return null;

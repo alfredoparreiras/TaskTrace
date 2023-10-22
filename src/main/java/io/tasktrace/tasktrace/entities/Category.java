@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Category {
     private final Integer id;
     private String category;
-
+    //TODO: Change to name
     // Constructors
     public Category(Integer id, String category) {
         this.id = Objects.requireNonNull(id);
