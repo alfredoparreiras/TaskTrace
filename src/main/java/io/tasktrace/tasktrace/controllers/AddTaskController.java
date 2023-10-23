@@ -49,6 +49,7 @@ public class AddTaskController extends HttpServlet {
             Task taskAdded;
             Category categoryAdded = null;
             boolean isAllValid = false;
+            boolean preValidation = true;
 
             //Repositories
             TaskRepository taskRepository = new TaskRepository(loggedUser);
@@ -59,8 +60,21 @@ public class AddTaskController extends HttpServlet {
             LocalDate dueDate = parsingDueDate(dueDateParameter, request);
             Priority priority = parsingPriority(priorityParameter, request);
             // If user is not available, it's impossible to save a Task. So user need to log in again.
-            if(validateAction(request, loggedUser, titleParameter) && (dueDate != null && priority != null))
+
+            ArrayList<Task> existingTasks = new ArrayList<>(taskRepository.getAllTasks());
+
+            for(Task task : existingTasks){
+                if(task.getTitle().equals(titleParameter)){
+                    request.setAttribute("errorMessage","It looks like you already have a task named this. " +
+                            "Please enter a different name for your new task.");
+                    preValidation = false;
+                }
+            }
+
+
+            if(validateAction(request, loggedUser, titleParameter) && (dueDate != null && priority != null) && preValidation)
             {
+
                 // If all data is good, is going to save this task into DB.
                 taskAdded = taskRepository.addTask(new Task(titleParameter, decriptionParameter, dueDate, priority, Integer.parseInt(loggedUser.getId()), false));
 
@@ -82,20 +96,19 @@ public class AddTaskController extends HttpServlet {
                     // If task and category were properly created, we save this these two into TaskCategory DB ( many-to-many relationship )
                     if(taskAdded != null)
                         isAllValid = taskCategoryRepository.addTaskCategory(new TaskCategory(taskAdded.getId().toString(), keyForCategory));
-
+                    else
+                        request.setAttribute("errorMessage","Task creation failed. Please try again.");
                 }
+            }
 
-
-                if(isAllValid)
-                {
-                    // Redirect to DashBoard if there is success
-                    response.sendRedirect(request.getContextPath() + "/dashboard");
-                }
-                else
-                {
-                    request.setAttribute("errorMessage","Task creation failed. Please try again.");
-                    request.getRequestDispatcher("WEB-INF/addTask.jsp").forward(request,response);
-                }
+            if(isAllValid)
+            {
+                // Redirect to DashBoard if there is success
+                response.sendRedirect(request.getContextPath() + "/dashboard");
+            }
+            else
+            {
+                request.getRequestDispatcher("WEB-INF/addTask.jsp").forward(request,response);
             }
         } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);

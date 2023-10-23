@@ -5,6 +5,9 @@
   Time: 4:16 p.m.
   To change this template use File | Settings | File Templates.
 --%>
+<%
+    String errorMessage = (String) request.getAttribute("errorMessage");
+%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -82,6 +85,11 @@
             <a href="${pageContext.request.contextPath}/dashboard"><button type="button" class="btn btn-outline-secondary mt-5">Return</button></a>
         </div>
     </form>
+    <section class="error">
+        <%if(errorMessage != null){%>
+            <p class="text-center text-danger text-capitalize"><%=errorMessage%></p>
+        <% } %>
+    </section>
 
 </section>
 

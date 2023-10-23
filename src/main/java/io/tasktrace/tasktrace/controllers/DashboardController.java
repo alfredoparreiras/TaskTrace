@@ -126,7 +126,7 @@ public class DashboardController extends HttpServlet {
 
         for(Task task : tasks)
         {
-            if(!task.getIsDone() && !task.getDueDate().isAfter(LocalDate.now()))
+            if(!task.getIsDone() && task.getDueDate().isAfter(LocalDate.now()))
             {
                 overdue++;
             }

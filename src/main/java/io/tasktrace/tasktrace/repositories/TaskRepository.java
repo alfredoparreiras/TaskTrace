@@ -40,9 +40,6 @@ public class TaskRepository {
                 ResultSet resultSet = statement.executeQuery();
                 while(resultSet.next())
                     tasks.add(readNextTask(resultSet));
-
-                if(tasks.size() == 0)
-                    return null;
                 return tasks;
         }
     }
