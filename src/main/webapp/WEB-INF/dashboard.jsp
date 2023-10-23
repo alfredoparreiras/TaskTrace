@@ -64,8 +64,8 @@
 <section class="dashboard__tasks d-flex flex-column align-items-center mt-5 mt-sm-5 mt-md-5 mt-lg-5">
     <div class="d-flex flex-column w-85 mb-5 justify-content-center">
         <h2>Hello <span class="text-capitalize"><%=user.getFirstName()%></span>,<br> You have <%=pendingTasks%> pending task(s).</h2>
-        <%@ include file="xsStatsDashboard.jsp" %>
-        <%@ include file="xsDashboardLayout.jsp" %>
+        <%@ include file="dashboarStats.jsp" %>
+        <%@ include file="dashboardContent.jsp" %>
     </div>
 </section>
 </body>
