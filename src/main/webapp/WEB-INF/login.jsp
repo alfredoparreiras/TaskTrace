@@ -75,7 +75,7 @@
       <%if(savedEmailCookie != null){%>
       <div class="mb-3 form-check mt-4">
         <input type="checkbox" class="form-check-input" id="saveEmailChecked" name="saveEmailCheckbox" checked>
-        <label class="form-check-label" for="saveEmailChecked">Save my email</label>
+        <label class="form-check-label" for="saveEmailChecked">Remember email next time?</label>
       </div>
       <%} else {%>
       <div class="mb-3 form-check mt-4">

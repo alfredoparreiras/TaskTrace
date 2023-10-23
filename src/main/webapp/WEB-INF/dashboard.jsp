@@ -58,8 +58,12 @@
     <a href="${pageContext.request.contextPath}/home" class="text-decoration-none">
         <p class="text-white fs-5 pt-3 ps-3">TaskTrace</p>
     </a>
-    <img src="${pageContext.request.contextPath}/resources/images/icons/account.svg" alt="account icon"
-         class="icon me-3">
+    <a href="${pageContext.request.contextPath}/login"
+       onclick="return confirm('Are you sure you want to logout?');">
+        <img src="${pageContext.request.contextPath}/resources/images/icons/logout.svg"
+             alt="account icon"
+             class="icon me-3">
+    </a>
 </header>
 <section class="dashboard__tasks d-flex flex-column align-items-center mt-5 mt-sm-5 mt-md-5 mt-lg-5">
     <div class="d-flex flex-column w-85 mb-5 justify-content-center">
