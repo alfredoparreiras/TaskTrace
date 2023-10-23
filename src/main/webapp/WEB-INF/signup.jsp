@@ -54,47 +54,52 @@
     </header>
     <section class="d-flex flex-column align-items-center mt-4">
         <h1 class="display-5 text-primary">Sign Up</h1>
-        <form id="signupForm" class="w-25" action="${pageContext.request.contextPath}/register" method="post">
-            <div class="mb-3">
-                <label for="firstName" class="form-label">First Name</label>
-                <input type="text" class="form-control" id="firstName" name="firstName" aria-describedby="nameHelp">
-            </div>
-            <div class="mb-3">
-                <label for="lastName" class="form-label">First Name</label>
-                <input type="text" class="form-control" id="lastName" name="lastName" aria-describedby="nameHelp">
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" aria-describedby="nameHelp">
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password">
-            </div>
-            <div class="mb-3">
-                <label for="confirmPassword" class="form-label">Confirm Password</label>
-                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
-            </div>
-            <div class="mb-3 form-check mt-4">
-                <input type="checkbox" class="form-check-input" id="termsCheckbox">
-                <label class="form-check-label" for="termsCheckbox">Agree with <a href="${pageContext.request.contextPath}/terms">terms and conditions</a>.</label>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+        <section id="signupForm">
+            <form action="${pageContext.request.contextPath}/register" method="post">
+                <div class="mb-2">
+                    <label for="firstName" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="firstName" name="firstName" aria-describedby="nameHelp">
+                </div>
+                <div class="mb-2">
+                    <label for="lastName" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="lastName" name="lastName" aria-describedby="nameHelp">
+                </div>
+                <div class="mb-2">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" aria-describedby="nameHelp">
+                </div>
+                <div class="mb-2">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password">
+                </div>
+                <div class="mb-2">
+                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+                </div>
+                <div class="mb-2 form-check mt-4">
+                    <input type="checkbox" class="form-check-input" id="termsCheckbox">
+                    <label class="form-check-label" for="termsCheckbox">Agree with <a href="${pageContext.request.contextPath}/terms">terms and conditions</a>.</label>
+                </div>
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary me-3">Submit</button>
+                    <a href="${pageContext.request.contextPath}/home"><button type="button" class="btn btn-outline-secondary">Return</button></a>
+                </div>
+            </form>
+        </section>
+        <section>
             <%if(creatingUser){ %>
-                <%if(message != null && message.equals("Your account was successfully created.")){%>
-                    <p class="text-success mt-3 text-center"><%=message%><br>Go to <a
-                            href="${pageContext.request.contextPath}/login" class="text-decoration-none">login</a></p>
-                <%} else if(message != null && !message.equals("Your account was successfully created.")){%>
-                    <p class="text-danger mt-3 text-center"><%=message%></p>
-                <% } else if(!wasDataFilled){%>
-                    <p class="text-danger mt-3 text-center">You must fill all fields</p>
-                <% }else {%>
-                    <p class="text-danger mt-3 text-center"><%=message%></p>
-                <%}%>
+            <%if(message != null && message.equals("Your account was successfully created.")){%>
+            <p class="text-success mt-3 text-center"><%=message%><br>Go to <a
+                    href="${pageContext.request.contextPath}/login" class="text-decoration-none">login</a></p>
+            <%} else if(message != null && !message.equals("Your account was successfully created.")){%>
+            <p class="text-danger mt-3 text-center"><%=message%></p>
+            <% } else if(!wasDataFilled){%>
+            <p class="text-danger mt-3 text-center">You must fill all fields</p>
+            <% }else {%>
+            <p class="text-danger mt-3 text-center"><%=message%></p>
             <%}%>
-<%--            TODO: Set as center this botton.--%>
-            <a href="${pageContext.request.contextPath}/home"><button type="button" class="btn btn-outline-secondary mt-1 ms-5">Return</button></a>
-        </form>
+            <%}%>
+        </section>
     </section>
     <footer class="fixed-bottom bg-primary footer d-flex align-items-center justify-content-center">
         <p class="text-white text-center fs-5 pt-3">TaskTrace © 2023</p>

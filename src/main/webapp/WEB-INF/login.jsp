@@ -52,45 +52,45 @@
   <header class="header bg-primary d-flex align-items-center">
     <a href="${pageContext.request.contextPath}/home" class="text-decoration-none"><p class="text-white fs-5 pt-3 ps-2">TaskTrace</p></a>
   </header>
-<section class="d-flex flex-column align-items-center mt-6">
+<section class="d-flex flex-column align-items-center mt-4">
   <h1 class="display-5 text-primary">Login</h1>
-  <form id="loginForm" action="${pageContext.request.contextPath}/login" method="post">
-    <div class="mb-3">
-      <label for="email" class="form-label">Email address</label>
-      <%if(savedEmailCookie != null){%>
+  <section class="py-5 px-3 " id="loginForm">
+    <form action="${pageContext.request.contextPath}/login" method="post">
+      <div class="mb-3">
+        <label for="email" class="form-label">Email address</label>
+        <%if(savedEmailCookie != null){%>
         <input type="email" class="form-control" id="email" name="email" value="<%=savedEmailCookie%>" aria-describedby="emailHelp">
-      <%} else {%>
+        <%} else {%>
         <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp">
-      <%}%>
-      <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-    </div>
-    <div class="row g-3 align-items-center">
-      <div class="col-auto">
-        <label for="password" class="col-form-label">Password</label>
+        <%}%>
+        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
       </div>
-      <div class="col-auto">
+      <div>
+        <label for="password" class="form-label">Password</label>
         <input type="password" id="password" class="form-control" name="password" aria-describedby="passwordHelpInline">
+        <div id="passwordHelpBlock" class="form-text">
+          Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces or emoji.
+        </div>
       </div>
-      <div class="col-auto">
-    <span id="passwordHelpInline" class="form-text">
-      Must be 8-20 characters long.
-    </span>
-      </div>
-    </div>
-    <%if(savedEmailCookie != null){%>
+      <%if(savedEmailCookie != null){%>
       <div class="mb-3 form-check mt-4">
         <input type="checkbox" class="form-check-input" id="saveEmailChecked" name="saveEmailCheckbox" checked>
         <label class="form-check-label" for="saveEmailChecked">Save my email</label>
       </div>
-    <%} else {%>
+      <%} else {%>
       <div class="mb-3 form-check mt-4">
         <input type="checkbox" class="form-check-input" id="saveEmail" name="saveEmailCheckbox" >
-        <label class="form-check-label" for="saveEmail">Save my email</label>
+        <label class="form-check-label" for="saveEmail">Remember email next time?</label>
       </div>
-    <%}%>
-    <button type="submit" class="btn btn-primary mt-1">Submit</button>
-    <a href="${pageContext.request.contextPath}/home"><button type="button" class="btn btn-outline-secondary mt-1 ms-5">Return</button></a>
-  </form>
+      <%}%>
+      <section class="mt-1">
+        <button type="submit" class="btn btn-primary me-3">Submit</button>
+        <a href="${pageContext.request.contextPath}/home">
+          <button type="button" class="btn btn-outline-secondary">Return</button>
+        </a>
+      </section>
+    </form>
+  </section>
   <%if(message != null){%>
     <p class="mt-3 text-danger text-center"><%=message%></p>
   <%}%>

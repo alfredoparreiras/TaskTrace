@@ -65,6 +65,12 @@
     width: 120px ;
 }
 
+@media screen and (min-width: 768px){
+    #loginForm, #signupForm {
+        width: 50%;
+    }
+}
+
 @media screen and (max-width: 768px){
 
     .large_screen_layout {
@@ -82,22 +88,14 @@
 
 @media screen and (min-width: 1920px) and (max-width: 2550px){
    body {
-       transform: scale(1.5);
-       border: red 3px solid;
+       zoom: 1.35
+
 
    }
 }
-@media screen and (min-width: 2551px) and (max-width: 3830px){
+@media screen and (min-width: 2551px){
    body {
-       transform: scale(1.7);
+       zoom: 1.8;
 
    }
 }
-
-@media screen and (min-width: 3830px) ){
-   body {
-       transform: scale(1.7);
-
-   }
-}
-
