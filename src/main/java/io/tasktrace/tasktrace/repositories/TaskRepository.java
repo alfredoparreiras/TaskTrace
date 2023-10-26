@@ -18,7 +18,7 @@ public class TaskRepository {
     private final User user;
 
     public TaskRepository(User user) {
-        String databaseName = "tasktrace";
+        String databaseName = "task_trace";
         this.JDBC_URL =  "jdbc:mysql://localhost:3306/" + databaseName;
         this.JDBC_USERNAME = "root";
         this.JDBC_PASSWORD = "19229094";
@@ -30,11 +30,11 @@ public class TaskRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
         {
-                String query = "SELECT * FROM tasktrace.Task WHERE user_id=? " +
-                               "ORDER BY created_at ASC";
+                String query = "SELECT * FROM task_trace.Task WHERE user_id=? " +
+                               "ORDER BY created_at ASC ";
 
                 PreparedStatement statement = connection.prepareStatement(query);
-                statement.setInt(1, Integer.parseInt(user.getId()));
+                statement.setInt(1, user.getId());
 
                 List<Task> tasks = new ArrayList<>();
                 ResultSet resultSet = statement.executeQuery();
@@ -48,7 +48,7 @@ public class TaskRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
         {
-            String query = "SELECT * FROM tasktrace.Task WHERE task_id=? ";
+            String query = "SELECT * FROM task_trace.Task WHERE task_id=? ";
 
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, taskId);
@@ -68,7 +68,7 @@ public class TaskRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD))
         {
-            String query = "INSERT INTO tasktrace.Task (task_id, title, description, due_date, priority, user_id, created_at, updated_at, is_done) \n" +
+            String query = "INSERT INTO task_trace.Task (task_id, title, description, due_date, priority, user_id, created_at, updated_at, is_done) \n" +
                            "VALUES (?,?,?,?,?,?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?);";
 
             PreparedStatement statement = connection.prepareStatement(query);
@@ -77,14 +77,14 @@ public class TaskRepository {
             statement.setString(3, task.getDescription());
             statement.setDate(4,Date.valueOf(task.getDueDate()));
             statement.setString(5, task.getPriority().toString());
-            statement.setInt(6,Integer.parseInt(user.getId()));
+            statement.setInt(6,(user.getId()));
             statement.setBoolean(7, task.getIsDone());
 
             int rowsAffected = statement.executeUpdate();
             if(rowsAffected > 0)
                 return new Task(task);
             else
-                throw new SQLException("Failled to create a Task");
+                throw new SQLException("Failed to create a Task");
         }
     }
     public void deleteTask(String taskId) throws ClassNotFoundException, SQLException
@@ -92,14 +92,14 @@ public class TaskRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD))
         {
-            String query = "DELETE FROM tasktrace.Task WHERE task_id=?";
+            String query = "DELETE FROM task_trace.Task WHERE task_id=?";
 
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, taskId);
 
             int rowsAffected = statement.executeUpdate();
             if(rowsAffected == 0)
-                throw new SQLException("Failed to Delete Task with ID: " + taskId.toString());
+                throw new SQLException("Failed to Delete Task with ID: " + taskId);
         }
     }
     public boolean updateTask(Task task) throws ClassNotFoundException, SQLException
@@ -107,7 +107,7 @@ public class TaskRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD))
         {
-            String query = "UPDATE tasktrace.Task " +
+            String query = "UPDATE task_trace.Task " +
                            "SET title = ?, description = ?, due_date = ?, priority = ?, " +
                            "created_at = ?, updated_at = CURRENT_TIMESTAMP, is_done = ? " +
                            "WHERE task_id = ?";
@@ -127,7 +127,7 @@ public class TaskRepository {
                 return true;
 
             if(rowsAffect == 0)
-                throw new SQLException("Failled to updated Task with ID:" + task.getId().toString());
+                throw new SQLException("Failed to updated Task with ID:" + task.getId().toString());
             return false;
 
         }

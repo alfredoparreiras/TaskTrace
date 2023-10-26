@@ -12,7 +12,7 @@ public class TaskCategoryRepository {
     private final String JDBC_PASSWORD;
 
     public TaskCategoryRepository() {
-        String databaseName = "tasktrace";
+        String databaseName = "task_trace";
         this.JDBC_URL =  "jdbc:mysql://localhost:3306/" + databaseName;
         this.JDBC_USERNAME = "root";
         this.JDBC_PASSWORD = "19229094";
@@ -24,7 +24,7 @@ public class TaskCategoryRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
         {
-            String query = "SELECT * FROM tasktrace.TaskCategory";
+            String query = "SELECT * FROM task_trace.TaskCategories";
 
             PreparedStatement statement = connection.prepareStatement(query);
 
@@ -46,7 +46,7 @@ public class TaskCategoryRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME ,JDBC_PASSWORD))
         {
-            String query = "insert into TaskCategory (task_id, category_id)" +
+            String query = "insert into task_trace.TaskCategories (task_id, category_id)" +
                            "values (?, ?);";
 
             PreparedStatement statement = connection.prepareStatement(query);
@@ -56,10 +56,8 @@ public class TaskCategoryRepository {
             int rowsAffected = statement.executeUpdate();
             if(rowsAffected == 0)
                 throw new SQLException("Failed to create a TaskCategory row.");
-            if(rowsAffected > 0)
-                return true;
 
-            return false;
+            return rowsAffected > 0;
         }
     }
 

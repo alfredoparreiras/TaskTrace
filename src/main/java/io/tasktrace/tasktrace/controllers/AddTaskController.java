@@ -76,7 +76,7 @@ public class AddTaskController extends HttpServlet {
             {
 
                 // If all data is good, is going to save this task into DB.
-                taskAdded = taskRepository.addTask(new Task(titleParameter, decriptionParameter, dueDate, priority, Integer.parseInt(loggedUser.getId()), false));
+                taskAdded = taskRepository.addTask(new Task(titleParameter, decriptionParameter, dueDate, priority, loggedUser.getId(), false));
 
                 // Retrieve all categories and check if this category already exists in DB.
                 Map<Integer,String> allCategoriesFromDB = categoryRepository.mapCategories();

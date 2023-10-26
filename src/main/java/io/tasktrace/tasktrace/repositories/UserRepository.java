@@ -14,7 +14,7 @@ public class UserRepository {
     private final String JDBC_PASSWORD;
 
     public UserRepository() {
-        String databaseName = "tasktrace";
+        String databaseName = "task_trace";
         this.JDBC_URL =  "jdbc:mysql://localhost:3306/" + databaseName;
         this.JDBC_USERNAME = "root";
         this.JDBC_PASSWORD = "19229094";
@@ -24,7 +24,7 @@ public class UserRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD))
         {
-            String query = "SELECT * FROM User WHERE email=?";
+            String query = "SELECT * FROM task_trace.User WHERE email=?";
 
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, email);
@@ -41,7 +41,7 @@ public class UserRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
         {
-            String query = "SELECT email FROM User;";
+            String query = "SELECT email FROM task_trace.User;";
 
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();
@@ -52,9 +52,6 @@ public class UserRepository {
                 emails.add(email);
             }
 
-            if(emails.isEmpty())
-                return null;
-
             return emails;
         }
     }
@@ -64,7 +61,7 @@ public class UserRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD))
         {
-            String query = "INSERT INTO tasktrace.User (first_name, last_name, password, email, createdAt) \n" +
+            String query = "INSERT INTO task_trace.User (first_name, last_name, password, email, created_at) \n" +
                            "VALUES (?,?,?,?, CURRENT_TIMESTAMP);";
 
             PreparedStatement statement = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
@@ -84,18 +81,18 @@ public class UserRepository {
         }
     }
 
-    private String getGeneratedId(PreparedStatement statement) throws SQLException
+    private Integer getGeneratedId(PreparedStatement statement) throws SQLException
     {
         try(ResultSet generatedKeys = statement.getGeneratedKeys())
         {
             if(generatedKeys.next())
-                return generatedKeys.getString(1);
+                return generatedKeys.getInt(1);
             throw new SQLException("The user was created, but the generated ID could not be read.");
         }
     }
 
     private User readNextUser(ResultSet resultSet) throws SQLException {
-        String id = resultSet.getString("user_id");
+        Integer id = resultSet.getInt("user_id");
         String firstName = resultSet.getString("first_name");
         String lastName = resultSet.getString("last_name");
         String password = resultSet.getString("password");
