@@ -88,8 +88,6 @@ public class LoginController extends HttpServlet {
 
 
     private boolean validPassword(User user, String password) {
-        if(user.getPassword().equals(password.trim()))
-            return true;
-        return false;
+        return user.getPassword().equals(password.trim());
     }
 }

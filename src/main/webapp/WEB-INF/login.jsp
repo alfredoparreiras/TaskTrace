@@ -45,6 +45,16 @@
           alert("Please fill out all required fields.")
         }
       })
+
+      let message = '<%= message %>';
+
+      if (message !== 'null') {
+        let toastEl = document.getElementById('errorToast');
+        let toast = new bootstrap.Toast(toastEl);
+
+        toast.show();
+      }
+
     }
   </script>
 </head>
@@ -68,9 +78,6 @@
       <div>
         <label for="password" class="form-label">Password</label>
         <input type="password" id="password" class="form-control" name="password" aria-describedby="passwordHelpInline">
-        <div id="passwordHelpBlock" class="form-text">
-          Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces or emoji.
-        </div>
       </div>
       <%if(savedEmailCookie != null){%>
       <div class="mb-3 form-check mt-4">
@@ -92,7 +99,18 @@
     </form>
   </section>
   <%if(message != null){%>
-    <p class="mt-3 text-danger text-center"><%=message%></p>
+  <div class="toast-container position-fixed top-3 end-0 p-3">
+    <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <img src="${pageContext.request.contextPath}/resources/images/icons/error.svg" class="rounded me-2 w-5" alt="...">
+        <strong class="me-auto">Error</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+        <%=message%>
+      </div>
+    </div>
+  </div>
   <%}%>
 </section>
 <footer class="fixed-bottom bg-primary footer d-flex align-items-center justify-content-center">

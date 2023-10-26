@@ -87,11 +87,12 @@
     </form>
     <section class="error">
         <%if(errorMessage != null){%>
-            <p class="text-center text-danger text-capitalize"><%=errorMessage%></p>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <%=errorMessage%>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         <% } %>
     </section>
-
 </section>
-
 </body>
 </html>

@@ -5,7 +5,7 @@
       Time: 5:46 p.m.
       To change this template use File | Settings | File Templates.
     --%>
-    <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
     <%
         boolean wasDataFilled = false;
         boolean creatingUser = false;
@@ -26,7 +26,7 @@
     <html>
     <head>
         <title>TaskTrace - Signup</title>
-        <meta  name="description" content="TaskTrace it is a productive hub where you can easly manage all your tasks">
+        <meta  name="description" content="TaskTrace it is a productive hub where you can easily manage all your tasks">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="robots" content="noindex,follow">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/styles.css">
@@ -71,10 +71,16 @@
                 <div class="mb-2">
                     <label for="password" class="form-label">Password</label>
                     <input type="password" class="form-control" id="password" name="password">
+                    <div class="form-text">
+                        Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces or emoji.
+                    </div>
                 </div>
                 <div class="mb-2">
                     <label for="confirmPassword" class="form-label">Confirm Password</label>
                     <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+                    <div  class="form-text">
+                        Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces or emoji.
+                    </div>
                 </div>
                 <div class="mb-2 form-check mt-4">
                     <input type="checkbox" class="form-check-input" id="termsCheckbox">
@@ -86,17 +92,28 @@
                 </div>
             </form>
         </section>
-        <section>
+        <section class="mt-5">
             <%if(creatingUser){ %>
             <%if(message != null && message.equals("Your account was successfully created.")){%>
-            <p class="text-success mt-3 text-center"><%=message%><br>Go to <a
-                    href="${pageContext.request.contextPath}/login" class="text-decoration-none">login</a></p>
-            <%} else if(message != null && !message.equals("Your account was successfully created.")){%>
-            <p class="text-danger mt-3 text-center"><%=message%></p>
+            <div class="alert alert-success" role="alert"><%=message%><br>Go to <a
+                    href="${pageContext.request.contextPath}/login" class="text-decoration-none">login</a>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <%} else if(message != null){%>
+            <div class="alert alert-danger" role="alert">
+                <%=message%>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
             <% } else if(!wasDataFilled){%>
-            <p class="text-danger mt-3 text-center">You must fill all fields</p>
+            <div class="alert alert-danger" role="alert">
+                You must fill all fields
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
             <% }else {%>
-            <p class="text-danger mt-3 text-center"><%=message%></p>
+            <div class="alert alert-danger" role="alert">
+                <%=message%>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
             <%}%>
             <%}%>
         </section>

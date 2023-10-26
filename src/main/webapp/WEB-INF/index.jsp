@@ -19,6 +19,17 @@
 
 </head>
 <body class="bg-light d-flex flex-column justify-content-center align-items-center vh-100">
+<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+        <img src="..." class="rounded me-2" alt="...">
+        <strong class="me-auto">Bootstrap</strong>
+        <small>11 mins ago</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+        Hello, world! This is a toast message.
+    </div>
+</div>
 <h1 class="initial__heading text-primary test mb-3">TaskTrace</h1>
 <h3 class="text-primary display-4 text-center mx-3">Bridging the gap between <span class="fw-bolder accent">To-Do</span> and <span class="fw-bolder accent">Done</span>.</h3>
 <div class="d-flex flex-column flex-sm-row gap-3 mt-5">

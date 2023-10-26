@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @WebServlet(name="SignUpController", urlPatterns = {"/signup", "/register"})
 public class SignUpController extends HttpServlet {
@@ -34,15 +36,21 @@ public class SignUpController extends HttpServlet {
 
         //If all data is filled we're going to enter Try-Catch
         try {
-            if(validUser(firstName, lastName, email, password, confirmPassword) && validEmail(email, request)) {
+
+            if(isDataValid(firstName, lastName, email, password, confirmPassword) && validEmail(email, request)) {
+                request.setAttribute("wasDataFilled", true);
+                if(checkPasswordFormat(password))
+                {
+                    request.setAttribute("message", "Your password must be between 8-20 characters, ");
+                }
+
                 // If Passwords are equal, create the user
-                if(validPasswords(password, confirmPassword)) {
-                    userRepository.addUser(new User(firstName.toLowerCase().trim(), lastName.toLowerCase().trim(), password.trim(), email.toLowerCase().trim()));
+                if(checkIfPasswordsAreEqual(password, confirmPassword) && checkPasswordFormat(password)) {
+                    userRepository.addUser(new User(firstName.toLowerCase().trim(), lastName.toLowerCase().trim(),
+                                                    password.trim(), email.toLowerCase().trim()));
                     request.setAttribute("message", "Your account was successfully created.");
-                    request.setAttribute("wasDataFilled", true);
                 } else {
                     request.setAttribute("message", "Your password must match.");
-                    request.setAttribute("wasDataFilled", true);
                 }
             } else {
                 request.setAttribute("wasDataFilled", false);
@@ -63,14 +71,24 @@ public class SignUpController extends HttpServlet {
         return true;
     }
 
-    private boolean validUser(String firstName, String lastName, String email, String password, String confirmPassword)
+    private boolean isDataValid(String firstName, String lastName, String email, String password, String confirmPassword)
     {
         return !firstName.isEmpty() && !lastName.isEmpty() && !email.isEmpty() && !password.isEmpty() && !confirmPassword.isEmpty();
     }
 
-    private boolean validPasswords(String password, String confirmPassword)
+    private boolean checkPasswordFormat(String password)
     {
-        return password.trim().equals(confirmPassword.trim());
+        String regex = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!]).{8,20}$";
+
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(password);
+
+        return matcher.matches();
+    }
+
+    private boolean checkIfPasswordsAreEqual(String password, String confirmPassword)
+    {
+        return password.equals(confirmPassword);
     }
 
 
