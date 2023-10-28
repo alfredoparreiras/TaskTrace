@@ -5,6 +5,7 @@
   Time: 4:11 p.m.
   To change this template use File | Settings | File Templates.
 --%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
   String savedEmailCookie = null;
   String message = null;
@@ -22,7 +23,6 @@
     }
   }
 %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
   <title>TaskTrace - Login</title>
@@ -46,15 +46,13 @@
         }
       })
 
-      let message = '<%= message %>';
+      let message = "<%= message %>";
 
       if (message !== 'null') {
-        let toastEl = document.getElementById('errorToast');
-        let toast = new bootstrap.Toast(toastEl);
-
+        let loginErrorToast = document.getElementById('loginErrorToast');
+        let toast = new bootstrap.Toast(loginErrorToast);
         toast.show();
       }
-
     }
   </script>
 </head>
@@ -64,7 +62,7 @@
   </header>
 <section class="d-flex flex-column align-items-center mt-4">
   <h1 class="display-5 text-primary">Login</h1>
-  <section class="py-5 px-3 " id="loginForm">
+  <section class="py-4 px-3 " id="loginForm">
     <form action="${pageContext.request.contextPath}/login" method="post">
       <div class="mb-3">
         <label for="email" class="form-label">Email address</label>
@@ -85,22 +83,22 @@
         <label class="form-check-label" for="saveEmailChecked">Remember email next time?</label>
       </div>
       <%} else {%>
-      <div class="mb-3 form-check mt-4">
+      <div class="form-check mt-4">
         <input type="checkbox" class="form-check-input" id="saveEmail" name="saveEmailCheckbox" >
         <label class="form-check-label" for="saveEmail">Remember email next time?</label>
       </div>
       <%}%>
-      <section class="mt-1">
-        <button type="submit" class="btn btn-primary me-3">Submit</button>
+      <section class="d-flex flex-column d-sm-inline-flex justify-content-sm-center flex-sm-row gap-3 mt-5 w-100">
+        <button type="submit" class="btn btn-primary btn-mobile p-2">Submit</button>
         <a href="${pageContext.request.contextPath}/home">
-          <button type="button" class="btn btn-outline-secondary">Return</button>
+          <button type="button" class="btn btn-outline-secondary btn-mobile p-2">Return</button>
         </a>
       </section>
     </form>
   </section>
   <%if(message != null){%>
-  <div class="toast-container position-fixed top-3 end-0 p-3">
-    <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="toast-container position-fixed top-5 end-0 p-3">
+    <div id="loginErrorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header">
         <img src="${pageContext.request.contextPath}/resources/images/icons/error.svg" class="rounded me-2 w-5" alt="...">
         <strong class="me-auto">Error</strong>
@@ -113,7 +111,7 @@
   </div>
   <%}%>
 </section>
-<footer class="fixed-bottom bg-primary footer d-flex align-items-center justify-content-center">
+<footer class="position-absolute bottom-0 bg-primary footer d-flex align-items-center justify-content-center w-100">
   <p class="text-white text-center fs-5 pt-3">TaskTrace © 2023</p>
 </footer>
 

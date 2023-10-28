@@ -87,10 +87,18 @@
     </form>
     <section class="error">
         <%if(errorMessage != null){%>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <%=errorMessage%>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="toast-container position-fixed top-5 end-0 p-3">
+            <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <img src="${pageContext.request.contextPath}/resources/images/icons/error.svg" class="rounded me-2 w-5" alt="...">
+                    <strong class="me-auto">Error!</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    <%=errorMessage%>
+                </div>
             </div>
+        </div>
         <% } %>
     </section>
 </section>

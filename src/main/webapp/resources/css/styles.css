@@ -65,11 +65,22 @@
     width: 120px ;
 }
 
+.top-5 {
+    top: 8%;
+}
+
 @media screen and (min-width: 768px){
     #loginForm, #signupForm {
         width: 50%;
     }
 }
+
+@media screen and (max-width: 570px){
+    .btn-mobile {
+        width: 100%;
+    }
+}
+
 
 @media screen and (max-width: 768px){
 

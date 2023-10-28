@@ -31,7 +31,7 @@ public class LoginController extends HttpServlet {
             User user = userRepository.getUserByEmail(email);
 
             if(user == null)
-                request.setAttribute("errorMessage", "The user associated with this email does not exist.");
+                request.setAttribute("errorMessage", "Email or Password don't match with our database. Please try again.");
 
             if(user != null) {
                 // If user want to save email for next access we save here through a Cookie.
@@ -47,7 +47,7 @@ public class LoginController extends HttpServlet {
                 }
 
                 if(!validPassword(user,password)){
-                    request.setAttribute("errorMessage", "Invalid password");
+                    request.setAttribute("errorMessage", "Email or Password don't match with our database. Please try again.");
                     request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
                 }
                 else
