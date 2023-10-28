@@ -41,17 +41,38 @@
 
 <div class="small_screen_layout mt-4">
     <%if (stats != null) {%>
-    <div class="d-flex flex-column">
-        <div class="mb-2">
-            <h5>Overdue : <span class="text-danger fw-bold fs-3"><%=overdue%></span></h5>
-        </div>
-        <div class="mb-2">
-            <h5>Ongoing : <span class="fw-bold fs-3"><%=ongoing%></span></h5>
-        </div>
-        <div class="mb-2">
-            <h5 class="">Complete : <span class="text-center text-success fw-bold fs-3"><%=complete%></span></h5>
+    <div class="container mb-4 p-3">
+        <div class="row">
+            <!-- First row, first column -->
+            <div class="col-6 text-center">
+                <h5 class="m-0">Overdue:</h5>
+            </div>
+            <!-- First row, second column -->
+            <div class="col-6 text-center">
+                <p class="text-danger fw-bold fs-3 m-0"><%=overdue%></p>
+            </div>
+
+            <!-- Second row, first column -->
+            <div class="col-6 text-center">
+                <h5 class="m-0">Ongoing:</h5>
+            </div>
+            <!-- Second row, second column -->
+            <div class="col-6 text-center">
+                <p class="fw-bold fs-3 m-0"><%=ongoing%></p>
+            </div>
+
+            <!-- Third row, first column -->
+            <div class="col-6 text-center">
+                <h5 class="m-0">Complete:</h5>
+            </div>
+            <!-- Third row, second column -->
+            <div class="col-6 text-center">
+                <p class="text-success fw-bold fs-3 m-0"><%=complete%></p>
+            </div>
         </div>
     </div>
+
+
     <%} else {%>
     <div class="d-flex flex-column">
         <div class="mb-2">
