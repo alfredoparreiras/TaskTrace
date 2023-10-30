@@ -84,12 +84,12 @@ public class DashboardController extends HttpServlet {
 
             boolean isActionFinish = false;
 
-            if(action.equals("done") && !task.getIsDone())
+            if(action.equals("complete") && !task.getIsDone())
             {
                 task.setIsDone(true);
                 isActionFinish = taskRepository.updateTask(task);
             }
-            if(action.equals("undo") && task.getIsDone())
+            if(action.equals("reset") && task.getIsDone())
             {
                 task.setIsDone(false);
                 isActionFinish = taskRepository.updateTask(task);
@@ -126,13 +126,12 @@ public class DashboardController extends HttpServlet {
 
         for(Task task : tasks)
         {
-            if(!task.getIsDone() && task.getDueDate().isAfter(LocalDate.now()))
+            if(!task.getIsDone() && LocalDate.now().isAfter(task.getDueDate()))
             {
                 overdue++;
             }
 
-            if(!task.getIsDone() && !task.getDueDate().isBefore(LocalDate.now()))
-            {
+            if(!task.getIsDone() && !LocalDate.now().isAfter(task.getDueDate()) ) {
                 ongoing++;
             }
 

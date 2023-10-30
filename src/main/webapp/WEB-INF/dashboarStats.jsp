@@ -1,46 +1,22 @@
 <div class="large_screen_layout w-35 align-self-center mt-5">
-    <%if (stats != null) {%>
     <div class="d-flex align-items-center justify-content-between">
         <div class="border border-opacity-50 rounded border-2 pt-2 px-3 m-3">
             <h4>Overdue</h4>
-            <p class="text-center text-danger fw-bold fs-3"><%=overdue%>
-            </p>
+            <p class="text-danger fw-bold fs-3 m-0 text-center"><%=overdue != null ? overdue : "0"%></p>
         </div>
         <div class="border border-opacity-50 rounded border-2 pt-2 px-3 m-3">
             <h4>Ongoing</h4>
-            <p class="text-center fw-bold fs-3"><%=ongoing%>
-            </p>
+            <p class="text-primary fw-bold fs-3 m-0 text-center"><%=ongoing != null ? ongoing : "0"%></p>
         </div>
         <div class="border border-opacity-50 rounded border-2 pt-2 px-3 m-3">
             <h4 class="">Complete</h4>
-            <p class="text-center text-success fw-bold fs-3"><%=complete%>
-            </p>
+            <p class="text-success fw-bold fs-3 m-0 text-center"><%=complete != null ? complete : "0"%></p>
         </div>
     </div>
-    <%} else {%>
-    <div class="d-flex align-items-center justify-content-between">
-        <div class="border border-opacity-50 rounded border-2 py-2 px-3 m-3 d-flex flex-column">
-            <h4>Overdue</h4>
-            <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg"
-                 alt="Icon that represents an Unknown symbol" class="w-50 align-self-center">
-        </div>
-        <div class="border border-opacity-50 rounded border-2 py-2 px-3 m-3 d-flex flex-column">
-            <h4>Ongoing</h4>
-            <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg"
-                 alt="Icon that represents an Unknown symbol" class="w-50 align-self-center">
-        </div>
-        <div class="border border-opacity-50 rounded border-2 py-2 px-3 m-3 d-flex flex-column">
-            <h4 class="">Complete</h4>
-            <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg"
-                 alt="Icon that represents an Unknown symbol" class="w-50 align-self-center">
-        </div>
-    </div>
-    <%}%>
 </div>
 
 
 <div class="small_screen_layout mt-4">
-    <%if (stats != null) {%>
     <div class="container mb-4 p-3">
         <div class="row">
             <!-- First row, first column -->
@@ -49,53 +25,24 @@
             </div>
             <!-- First row, second column -->
             <div class="col-6 text-center">
-                <p class="text-danger fw-bold fs-3 m-0"><%=overdue%></p>
+                <p class="text-danger fw-bold fs-3 m-0"><%=overdue != null ? overdue : "0"%></p>
             </div>
-
             <!-- Second row, first column -->
             <div class="col-6 text-center">
                 <h5 class="m-0">Ongoing:</h5>
             </div>
             <!-- Second row, second column -->
             <div class="col-6 text-center">
-                <p class="fw-bold fs-3 m-0"><%=ongoing%></p>
+                <p class="fw-bold fs-3 m-0"><%=ongoing != null ? ongoing : "0"%></p>
             </div>
-
             <!-- Third row, first column -->
             <div class="col-6 text-center">
                 <h5 class="m-0">Complete:</h5>
             </div>
             <!-- Third row, second column -->
             <div class="col-6 text-center">
-                <p class="text-success fw-bold fs-3 m-0"><%=complete%></p>
+                <p class="text-success fw-bold fs-3 m-0"><%=complete != null ? complete : "0"%></p>
             </div>
         </div>
     </div>
-
-
-    <%} else {%>
-    <div class="d-flex flex-column">
-        <div class="mb-2">
-            <h5>Overdue :
-                <span class="text-danger fw-bold fs-3">
-                    <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg" alt="Icon that represents an Unknown symbol" class="w-5 align-self-center">
-                </span>
-            </h5>
-        </div>
-        <div class="mb-2">
-            <h5>Ongoing :
-                <span class="fw-bold fs-3">
-                    <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg" alt="Icon that represents an Unknown symbol" class="w-5 align-self-center">
-                </span>
-            </h5>
-        </div>
-        <div class="mb-2">
-            <h5 class="">Complete :
-                <span class="text-center text-success fw-bold fs-3">
-                    <img src="${pageContext.request.contextPath}/resources/images/icons/unknown.svg" alt="Icon that represents an Unknown symbol" class="w-5 align-self-center">
-                </span>
-            </h5>
-        </div>
-    </div>
-    <%}%>
 </div>

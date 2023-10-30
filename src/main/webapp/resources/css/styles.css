@@ -17,6 +17,10 @@
     font-size: 7rem;
 }
 
+.sub__heading {
+    font-size: 3rem;
+}
+
 .accent {
     color: var(--accent-color);
 }
@@ -50,6 +54,8 @@
     width: 10% !important;
 }
 
+.w-15 { width: 15% !important}
+
 .w-5 {
     width: 5% !important;
 }
@@ -69,20 +75,43 @@
     top: 8%;
 }
 
+@media screen and (max-width: 576px){
+    .btn-mobile {
+        width: 100%;
+    }
+}
+
 @media screen and (min-width: 768px){
     #loginForm, #signupForm {
         width: 50%;
     }
 }
 
-@media screen and (max-width: 570px){
-    .btn-mobile {
-        width: 100%;
+@media screen and (min-width: 768px){
+    .large--footer {
+        position: fixed;
+        bottom: 0;
+    }
+}
+
+@media screen and (min-height: 635px){
+    .large--footer {
+        position: fixed;
+        bottom: 0;
+    }
+}
+
+@media screen and ( min-height: 837px)
+{
+    .large--footer-signup{
+        position: fixed;
+        bottom: 0;
     }
 }
 
 
-@media screen and (max-width: 768px){
+
+@media screen and (max-width: 668px){
 
     .large_screen_layout {
         display: none;
@@ -92,16 +121,22 @@
         display: block
     }
 
+    .initial__logo{
+        width: 100%;
+    }
+
     .initial__heading {
         font-size: 4rem;
+    }
+
+    .sub__heading {
+        font-size: 2rem;
     }
 }
 
 @media screen and (min-width: 1920px) and (max-width: 2550px){
    body {
        zoom: 1.35
-
-
    }
 }
 @media screen and (min-width: 2551px){

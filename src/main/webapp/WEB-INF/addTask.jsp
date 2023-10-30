@@ -22,73 +22,91 @@
     <script>
         window.onload = function() {
             //Setting  Date as Today.
-            var date = new Date(); // gets the current date
-            var day = ("0" + date.getDate()).slice(-2); // format day to two digits
-            var month = ("0" + (date.getMonth() + 1)).slice(-2); // format month to two digits
-            var today = date.getFullYear()+"-"+(month)+"-"+(day) ; // concatenate the year, month and day
+            let date = new Date(); // gets the current date
+            let day = ("0" + date.getDate()).slice(-2); // format day to two digits
+            let month = ("0" + (date.getMonth() + 1)).slice(-2); // format month to two digits
+            let today = date.getFullYear()+"-"+(month)+"-"+(day) ; // concatenate the year, month and day
             document.getElementById("dueDate").value = today; // sets 'today' as the value for 'dueDate'
 
             //Setting Select's Height
-            var selectElement = document.getElementById("category");
-            var numberOfOptions = selectElement.options.length;
+            let selectElement = document.getElementById("category");
+            let numberOfOptions = selectElement.options.length;
 
             selectElement.size = numberOfOptions;
+
+            let errorMessage = '<%=errorMessage%>'
+
+            if(errorMessage !== 'null'){
+                let toastError = document.getElementById('addTaskErrorToast')
+                let taskToast = new bootstrap.Toast(toastError)
+                taskToast.show()
+            }
         }
 
     </script>
 </head>
 <body class="d-flex flex-column">
-<header class="header bg-primary d-flex align-items-center justify-content-between">
-    <a href="${pageContext.request.contextPath}/dashboard" class="text-decoration-none">
-        <p class="text-white fs-5 pt-3 ps-2">TaskTrace</p>
+<header class="header bg-primary d-flex align-items-center justify-content-between w-100">
+    <div class="d-flex">
+        <a href="${pageContext.request.contextPath}/dashboard" class="text-decoration-none d-flex align-items-center">
+            <img src="${pageContext.request.contextPath}/resources/images/Logo.png"  class="w-5">
+            <p class="text-white fs-5 m-0">TaskTrace</p>
+        </a>
+    </div>
+    <a href="${pageContext.request.contextPath}/login"
+       onclick="return confirm('Are you sure you want to logout?');">
+        <img src="${pageContext.request.contextPath}/resources/images/icons/logout.svg"
+             alt="account icon"
+             class="icon me-3">
     </a>
-    <img src="${pageContext.request.contextPath}/resources/images/icons/account.svg" alt="account icon" class="icon me-3">
 </header>
 <section class="w-75 my-5 mx-auto">
     <h3 class="text-center text-primary mb-5">Add a Task</h3>
     <form action="${pageContext.request.contextPath}/addTask" method="post">
-        <div class="form-floating mb-3">
+        <div class="mb-3">
             <input type="text" class="form-control" id="title" placeholder="Title" name="title">
-            <label for="title">Title</label>
+            <div id="emailHelp" class="form-text">Must be less than 20 characters.</div>
         </div>
-        <div class="form-floating">
+        <div class="">
             <input type="text" class="form-control" id="description" placeholder="Description" name="description">
-            <label for="description">Description</label>
         </div>
-        <div class="form-floating mt-3">
+        <div class="mt-3">
+            <label class="my-2" for="dueDate">Due Date</label>
             <input type="date" class="form-control" id="dueDate" placeholder="Due Date" name="dueDate">
-            <label for="dueDate">Due Date</label>
         </div>
-        <label class="my-2" for="category">Category</label>
-        <select class="form-select" aria-label="Default select example" id="category" name="categories" multiple>
-            <option value="work">Work</option>
-            <option value="personal">Personal</option>
-            <option value="health&fitness">Health & Fitness</option>
-            <option value="shopping">Shopping</option>
-            <option value="finance">Finance</option>
-            <option value="social">Social</option>
-            <option value="education">Education</option>
-            <option value="travel">Travel</option>
-            <option value="hobbies">Hobbies</option>
-        </select>
-        <div class="form-floating mt-3">
+       <div class="mt-3">
+           <label class="my-2" for="category">Category</label>
+           <select class="form-select" aria-label="Default select example" id="category" name="categories" multiple>
+               <option value="work">Work</option>
+               <option value="personal">Personal</option>
+               <option value="health&fitness">Health & Fitness</option>
+               <option value="shopping">Shopping</option>
+               <option value="finance">Finance</option>
+               <option value="social">Social</option>
+               <option value="education">Education</option>
+               <option value="travel">Travel</option>
+               <option value="hobbies">Hobbies</option>
+           </select>
+           <div id="categoryHelp" class="form-text">You can choose more than one by pressing "cmd" on Mac or "Ctrl" on Windows while clicking the options.</div>
+       </div>
+        <div class="mt-3">
+            <label class="my-2" for="priority">Priority</label>
             <select class="form-select" aria-label="Default select example" id="priority" name="priority">
                 <option value="Urgent">Urgent</option>
                 <option value="High">High</option>
                 <option value="Medium">Medium</option>
                 <option value="Low">Low</option>
             </select>
-            <label for="priority">Priority</label>
         </div>
-        <div>
-            <button type="submit" class="btn btn-primary mt-5 me-3">Submit</button>
-            <a href="${pageContext.request.contextPath}/dashboard"><button type="button" class="btn btn-outline-secondary mt-5">Return</button></a>
+        <div class="d-flex flex-column d-sm-inline-flex justify-content-sm-evenly justify-content-lg-start flex-sm-row gap-3 mt-5 w-100">
+            <button type="submit" class="btn btn-primary btn-mobile py-2 px-4">Submit</button>
+            <a href="${pageContext.request.contextPath}/dashboard" class="btn btn-outline-secondary">Return</a>
         </div>
     </form>
     <section class="error">
         <%if(errorMessage != null){%>
         <div class="toast-container position-fixed top-5 end-0 p-3">
-            <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div id="addTaskErrorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
                 <div class="toast-header">
                     <img src="${pageContext.request.contextPath}/resources/images/icons/error.svg" class="rounded me-2 w-5" alt="...">
                     <strong class="me-auto">Error!</strong>

@@ -56,10 +56,13 @@
     }
   </script>
 </head>
-<body class="vh-100">
-  <header class="header bg-primary d-flex align-items-center">
-    <a href="${pageContext.request.contextPath}/home" class="text-decoration-none"><p class="text-white fs-5 pt-3 ps-2">TaskTrace</p></a>
-  </header>
+<body class="d-flex flex-column min-vh-100">
+<header class="header bg-primary d-flex align-items-center justify-content-between w-100">
+    <a href="${pageContext.request.contextPath}/home" class="text-decoration-none d-flex align-items-center">
+      <img src="${pageContext.request.contextPath}/resources/images/Logo.png"  class="w-5">
+      <p class="text-white fs-5 m-0">TaskTrace</p>
+    </a>
+</header>
 <section class="d-flex flex-column align-items-center mt-4">
   <h1 class="display-5 text-primary">Login</h1>
   <section class="py-4 px-3 " id="loginForm">
@@ -88,17 +91,15 @@
         <label class="form-check-label" for="saveEmail">Remember email next time?</label>
       </div>
       <%}%>
-      <section class="d-flex flex-column d-sm-inline-flex justify-content-sm-center flex-sm-row gap-3 mt-5 w-100">
-        <button type="submit" class="btn btn-primary btn-mobile p-2">Submit</button>
-        <a href="${pageContext.request.contextPath}/home">
-          <button type="button" class="btn btn-outline-secondary btn-mobile p-2">Return</button>
-        </a>
+      <section class="d-flex flex-column d-sm-inline-flex justify-content-sm-evenly justify-content-lg-start flex-sm-row gap-3 mt-5 w-100">
+        <button type="submit" class="btn btn-primary btn-mobile py-2 px-4">Submit</button>
+        <a href="${pageContext.request.contextPath}/home" class="btn btn-outline-secondary btn-mobile py-2 px-4">Return</a>
       </section>
     </form>
   </section>
   <%if(message != null){%>
   <div class="toast-container position-fixed top-5 end-0 p-3">
-    <div id="loginErrorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div id="loginErrorToast" class="toast text-bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header">
         <img src="${pageContext.request.contextPath}/resources/images/icons/error.svg" class="rounded me-2 w-5" alt="...">
         <strong class="me-auto">Error</strong>
@@ -111,9 +112,8 @@
   </div>
   <%}%>
 </section>
-<footer class="position-absolute bottom-0 bg-primary footer d-flex align-items-center justify-content-center w-100">
+<footer class="bg-primary w-100 large--footer">
   <p class="text-white text-center fs-5 pt-3">TaskTrace © 2023</p>
 </footer>
-
 </body>
 </html>

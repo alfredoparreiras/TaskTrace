@@ -72,11 +72,13 @@
                 }
             }
         </script>
-
     </head>
-    <body class="vh-100">
-    <header class="header bg-primary d-flex align-items-center">
-        <a href="${pageContext.request.contextPath}/home" class="text-decoration-none"><p class="text-white fs-5 pt-3 ps-2">TaskTrace</p></a>
+    <body class="d-flex flex-column min-vh-100">
+    <header class="header bg-primary d-flex align-items-center justify-content-between w-100">
+            <a href="${pageContext.request.contextPath}/home" class="text-decoration-none d-flex align-items-center">
+                <img src="${pageContext.request.contextPath}/resources/images/Logo.png"  class="w-5">
+                <p class="text-white fs-5 m-0">TaskTrace</p>
+            </a>
     </header>
     <section class="d-flex flex-column align-items-center mt-4 px-4">
         <h1 class="display-5 text-primary">Sign Up</h1>
@@ -121,9 +123,9 @@
                     <input type="checkbox" class="form-check-input" id="termsCheckbox">
                     <label class="form-check-label" for="termsCheckbox">Agree with <a href="${pageContext.request.contextPath}/terms">terms and conditions</a>.</label>
                 </div>
-                <div class="mt-4 d-sm-inline-flex">
-                    <button type="submit" class="btn btn-primary btn-mobile mb-3 p-2">Submit</button>
-                    <a href="${pageContext.request.contextPath}/home"><button type="button" class="btn btn-outline-secondary btn-mobile p-2">Return</button></a>
+                <div class="d-flex flex-column d-sm-inline-flex justify-content-sm-evenly justify-content-lg-start flex-sm-row gap-3 mt-5 w-100">
+                    <button type="submit" class="btn btn-primary btn-mobile py-2 px-4">Submit</button>
+                    <a href="${pageContext.request.contextPath}/home" class="btn btn-outline-secondary btn-mobile py-2 px-4">Return</a>
                 </div>
             </form>
         </section>
@@ -159,7 +161,7 @@
             <%}%>
         </section>
     </section>
-    <footer class="position-absolute bottom-0 bg-primary footer d-flex align-items-center justify-content-center w-100">
+    <footer class="bg-primary w-100 large--footer-signup">
         <p class="text-white text-center fs-5 pt-3">TaskTrace © 2023</p>
     </footer>
     </body>

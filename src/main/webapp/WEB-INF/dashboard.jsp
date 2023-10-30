@@ -55,9 +55,12 @@
 </head>
 <body>
 <header class="header bg-primary d-flex align-items-center justify-content-between w-100">
-    <a href="${pageContext.request.contextPath}/home" class="text-decoration-none">
-        <p class="text-white fs-5 pt-3 ps-3">TaskTrace</p>
-    </a>
+    <div class="d-flex">
+        <a href="${pageContext.request.contextPath}/dashboard" class="text-decoration-none d-flex align-items-center">
+            <img src="${pageContext.request.contextPath}/resources/images/Logo.png"  class="w-5">
+            <p class="text-white fs-5 m-0">TaskTrace</p>
+        </a>
+    </div>
     <a href="${pageContext.request.contextPath}/login"
        onclick="return confirm('Are you sure you want to logout?');">
         <img src="${pageContext.request.contextPath}/resources/images/icons/logout.svg"
@@ -67,7 +70,7 @@
 </header>
 <section class="dashboard__tasks d-flex flex-column align-items-center mt-5 mt-sm-5 mt-md-5 mt-lg-5">
     <div class="d-flex flex-column w-85 mb-5 justify-content-center">
-        <h2>Hello <span class="text-capitalize"><%=user.getFirstName()%></span>,<br> You have <%=pendingTasks%> pending task(s).</h2>
+        <h2>Hello <span class="text-capitalize"><%=user.getFirstName()%></span>,<br> You have <span class="border-bottom border-1 border-dark"><%=pendingTasks%></span> pending task(s).</h2>
         <%@ include file="dashboarStats.jsp" %>
         <%@ include file="dashboardContent.jsp" %>
     </div>

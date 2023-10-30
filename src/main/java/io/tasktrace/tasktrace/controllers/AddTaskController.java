@@ -25,6 +25,7 @@ import java.util.Map;
 
 @WebServlet(name = "AddTaskController", urlPatterns = {"/addTask"})
 public class AddTaskController extends HttpServlet {
+    String addTaskMessage = null;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -63,10 +64,15 @@ public class AddTaskController extends HttpServlet {
 
             ArrayList<Task> existingTasks = new ArrayList<>(taskRepository.getAllTasks());
 
+            if(titleParameter.length() > 20){
+                addTaskMessage = "Your title must be less than 20 characters.";
+                preValidation = false;
+            }
+
             for(Task task : existingTasks){
                 if(task.getTitle().equals(titleParameter)){
-                    request.setAttribute("errorMessage","It looks like you already have a task named this. " +
-                            "Please enter a different name for your new task.");
+                    addTaskMessage = "It looks like you already have a task named this. \" +\n" +
+                            "                            \"Please enter a different name for your new task.";
                     preValidation = false;
                 }
             }
@@ -97,7 +103,7 @@ public class AddTaskController extends HttpServlet {
                     if(taskAdded != null)
                         isAllValid = taskCategoryRepository.addTaskCategory(new TaskCategory(taskAdded.getId().toString(), keyForCategory));
                     else
-                        request.setAttribute("errorMessage","Task creation failed. Please try again.");
+                        addTaskMessage = "Task creation failed. Please try again.";
                 }
             }
 
@@ -108,6 +114,7 @@ public class AddTaskController extends HttpServlet {
             }
             else
             {
+                request.setAttribute("errorMessage", addTaskMessage);
                 request.getRequestDispatcher("WEB-INF/addTask.jsp").forward(request,response);
             }
         } catch (ClassNotFoundException | SQLException e) {
