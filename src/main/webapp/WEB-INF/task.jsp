@@ -1,4 +1,6 @@
-<%--
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.HashMap" %>
+<%@ page import="java.util.Map" %><%--
   Created by IntelliJ IDEA.
   User: alfredops
   Date: 10/17/23
@@ -7,11 +9,12 @@
 --%>
 <%
     String errorMessage = (String) request.getAttribute("errorMessage");
-
-    String title = null;
-    if(request.getAttribute("title") != null)
-        title = (String) request.getAttribute("title");
-
+    String taskId = (String) request.getAttribute("taskId");
+    String title = (String) request.getAttribute("title");
+    String description = (String) request.getAttribute("description");
+    String dueDate = (String) request.getAttribute("dueDate");
+    String priority = (String) request.getAttribute("priority");
+    Map<String, String> categoryDictionary = (Map<String, String>) request.getAttribute("categories");
 
 %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -32,13 +35,19 @@
             let day = ("0" + date.getDate()).slice(-2); // format day to two digits
             let month = ("0" + (date.getMonth() + 1)).slice(-2); // format month to two digits
             let today = date.getFullYear()+"-"+(month)+"-"+(day) ; // concatenate the year, month and day
-            document.getElementById("dueDate").value = today; // sets 'today' as the value for 'dueDate'
+            let dueDate = '<%=dueDate%>'
+            if(dueDate === 'null')
+            {
+                document.getElementById("dueDate").value = today; // sets 'today' as the value for 'dueDate'
+            }
+            else
+            {
+                document.getElementById("dueDate").value = dueDate
+            }
 
             //Setting Select's Height
             let selectElement = document.getElementById("category");
-            let numberOfOptions = selectElement.options.length;
-
-            selectElement.size = numberOfOptions;
+            selectElement.size = selectElement.options.length;
 
             let errorMessage = '<%=errorMessage%>'
 
@@ -67,14 +76,16 @@
     </a>
 </header>
 <section class="w-75 my-5 mx-auto">
-    <h3 class="text-center text-primary mb-5">Add a Task</h3>
+    <h3 class="text-center text-primary mb-5">Task Details</h3>
     <form action="${pageContext.request.contextPath}/task" method="post">
+        <input type="hidden" name="_method" value="<%=taskId != null ? "put" : ""%>">
+        <input type="hidden" name="taskId" value="<%=taskId != null ? taskId : ""%>">
         <div class="mb-3">
             <input type="text" class="form-control" id="title" placeholder="Title" name="title" value="<%= title != null ? title : "" %>">
             <div id="emailHelp" class="form-text">Must be less than 20 characters.</div>
         </div>
         <div class="">
-            <input type="text" class="form-control" id="description" placeholder="Description" name="description">
+            <input type="text" class="form-control" id="description" placeholder="Description" name="description" value="<%=description != null ? description : ""%>">
         </div>
         <div class="mt-3">
             <label class="my-2" for="dueDate">Due Date</label>
@@ -83,25 +94,37 @@
        <div class="mt-3">
            <label class="my-2" for="category">Category</label>
            <select class="form-select" aria-label="Default select example" id="category" name="categories" multiple>
-               <option value="work">Work</option>
-               <option value="personal">Personal</option>
-               <option value="health&fitness">Health & Fitness</option>
-               <option value="shopping">Shopping</option>
-               <option value="finance">Finance</option>
-               <option value="social">Social</option>
-               <option value="education">Education</option>
-               <option value="travel">Travel</option>
-               <option value="hobbies">Hobbies</option>
+               <%if(categoryDictionary != null){ %>
+                       <option value="work" <%=categoryDictionary.containsValue("work") ? "selected" : ""%>>Work</option>
+                       <option value="personal"<%=categoryDictionary.containsValue("personal") ? "selected" : ""%>>Personal</option>
+                       <option value="health&fitness"<%=categoryDictionary.containsValue("health&fitness") ? "selected" : ""%>>Health & Fitness</option>
+                       <option value="shopping" <%=categoryDictionary.containsValue("shopping") ? "selected" : ""%>>Shopping</option>
+                       <option value="finance" <%=categoryDictionary.containsValue("finance") ? "selected" : ""%>>Finance</option>
+                       <option value="social" <%=categoryDictionary.containsValue("social") ? "selected" : ""%>>Social</option>
+                       <option value="education" <%=categoryDictionary.containsValue("education") ? "selected" : ""%>>Education</option>
+                       <option value="travel" <%=categoryDictionary.containsValue("travel") ? "selected" : ""%>>Travel</option>
+                       <option value="hobbies" <%=categoryDictionary.containsValue("hobbies") ? "selected" : ""%>>Hobbies</option>
+               <% }else{%>
+                   <option value="work">Work</option>
+                   <option value="personal">Personal</option>
+                   <option value="health&fitness">Health & Fitness</option>
+                   <option value="shopping">Shopping</option>
+                   <option value="finance">Finance</option>
+                   <option value="social">Social</option>
+                   <option value="education">Education</option>
+                   <option value="travel">Travel</option>
+                   <option value="hobbies">Hobbies</option>
+               <%}%>
            </select>
            <div id="categoryHelp" class="form-text">You can choose more than one by pressing "cmd" on Mac or "Ctrl" on Windows while clicking the options.</div>
        </div>
         <div class="mt-3">
             <label class="my-2" for="priority">Priority</label>
             <select class="form-select" aria-label="Default select example" id="priority" name="priority">
-                <option value="Urgent">Urgent</option>
-                <option value="High">High</option>
-                <option value="Medium">Medium</option>
-                <option value="Low">Low</option>
+                <option value="Urgent" <%=priority != null && priority.equals("urgent") ? "selected" : ""%>>Urgent</option>
+                <option value="High" <%=priority != null && priority.equals("high") ? "selected" : ""%>>High</option>
+                <option value="Medium" <%=priority != null && priority.equals("medium") ? "selected" : ""%>>Medium</option>
+                <option value="Low" <%=priority != null && priority.equals("low") ? "selected" : ""%>>Low</option>
             </select>
         </div>
         <div class="d-flex flex-column d-sm-inline-flex justify-content-sm-evenly justify-content-lg-start flex-sm-row gap-3 mt-5 w-100">

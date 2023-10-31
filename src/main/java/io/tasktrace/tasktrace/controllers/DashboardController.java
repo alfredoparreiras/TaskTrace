@@ -87,12 +87,12 @@ public class DashboardController extends HttpServlet {
             if(action.equals("complete") && !task.getIsDone())
             {
                 task.setIsDone(true);
-                isActionFinish = taskRepository.updateTask(task);
+                isActionFinish = taskRepository.updateTask(taskId, task);
             }
             if(action.equals("reset") && task.getIsDone())
             {
                 task.setIsDone(false);
-                isActionFinish = taskRepository.updateTask(task);
+                isActionFinish = taskRepository.updateTask(taskId, task);
             }
             if(!isActionFinish)
                 request.setAttribute("errorMessage", "Something got wrong in update Task Status.");

@@ -102,14 +102,14 @@ public class TaskRepository {
                 throw new SQLException("Failed to Delete Task with ID: " + taskId);
         }
     }
-    public boolean updateTask(Task task) throws ClassNotFoundException, SQLException
+    public boolean updateTask(String taskId, Task task) throws ClassNotFoundException, SQLException
     {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD))
         {
             String query = "UPDATE task_trace.Task " +
                            "SET title = ?, description = ?, due_date = ?, priority = ?, " +
-                           "created_at = ?, updated_at = CURRENT_TIMESTAMP, is_done = ? " +
+                           "updated_at = CURRENT_TIMESTAMP, is_done = ? " +
                            "WHERE task_id = ?";
 
             PreparedStatement statement = connection.prepareStatement(query);
@@ -117,9 +117,8 @@ public class TaskRepository {
             statement.setString(2,task.getDescription());
             statement.setDate(3, Date.valueOf(task.getDueDate()));
             statement.setString(4, task.getPriority().toString());
-            statement.setTimestamp(5,Timestamp.valueOf(task.getCreatedAt()));
-            statement.setBoolean(6, task.getIsDone());
-            statement.setString(7,task.getId().toString());
+            statement.setBoolean(5, task.getIsDone());
+            statement.setString(6,taskId);
 
 
             int rowsAffect = statement.executeUpdate();

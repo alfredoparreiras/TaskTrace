@@ -16,10 +16,7 @@ import java.sql.SQLException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @WebServlet(name = "TaskController", urlPatterns = {"/task"})
 public class TaskController extends HttpServlet {
@@ -27,7 +24,7 @@ public class TaskController extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String method = request.getParameter("-_method");
+        String method = request.getParameter("_method");
         if(method != null && method.equals("put"))
             doPut(request,response);
         else
@@ -50,17 +47,18 @@ public class TaskController extends HttpServlet {
 
                 Task task = taskRepository.getTaskById(taskId);
 
-                String categoriesInRow = null;
+                Map<String, String> categoryDictionary = new HashMap<>();
                 List<String> categories = taskCategoryRepository.getTaskCategoriesByID(taskId);
                 for(String category : categories){
-                    categoriesInRow += category + ",";
+                    categoryDictionary.put(category,category);
                 }
 
                 request.setAttribute("title", task.getTitle());
                 request.setAttribute("description", task.getDescription());
                 request.setAttribute("dueDate", task.getDueDate().toString());
-                request.setAttribute("category", categoriesInRow);
+                request.setAttribute("categories", categoryDictionary);
                 request.setAttribute("priority", task.getPriority().toString());
+                request.setAttribute("taskId", task.getId().toString());
 
             } catch (ClassNotFoundException | SQLException e) {
                 throw new RuntimeException(e);
@@ -159,19 +157,33 @@ public class TaskController extends HttpServlet {
             throw new RuntimeException(e);
         }
     }
-
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         try {
-            String taskById = request.getParameter("taskId");
+            String taskId = request.getParameter("taskId");
+            // Retrieving Data from Request
+            String titleParameter = request.getParameter("title");
+            String decriptionParameter = request.getParameter("description");
+            String dueDateParameter = request.getParameter("dueDate");
+            String[] categoriesParameter = request.getParameterValues("categories");
+            String priorityParameter = request.getParameter("priority");
 
             HttpSession session = request.getSession(true);
             User user = (User) session.getAttribute("loggedUser");
             TaskRepository taskRepository = new TaskRepository(user);
-            Task task = taskRepository.getTaskById(taskById);
+            Task task = taskRepository.getTaskById(taskId);
 
-            boolean isUpdated = taskRepository.updateTask(task);
+            LocalDate dueDate = parsingDueDate(dueDateParameter, request);
+            Priority priority = parsingPriority(priorityParameter, request);
+
+            Task temporaryTask = new Task(titleParameter, decriptionParameter,dueDate, priority,user.getId(), task.getIsDone());
+            boolean isUpdated = taskRepository.updateTask(taskId,temporaryTask);
+
+            if(isUpdated)
+                response.sendRedirect(request.getContextPath() + "/dashboard");
+            else
+                request.getRequestDispatcher("WEB-INF/task.jsp").forward(request,response);
 
         } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);

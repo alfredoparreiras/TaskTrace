@@ -96,7 +96,7 @@
     <%for (Task task : tasks) {
       boolean done = task.getIsDone();
     %>
-      <div class="d-flex flex-column mt-5">
+      <div class="d-flex flex-column mt-5"  onclick="redirectToTask('<%=task.getId()%>')">
           <%--Task Index--%>
           <h3 class="mb-2">Task <span class="fw-bold"># </span> <%=mobileIndex++%></h3>
           <%--Task Title--%>
