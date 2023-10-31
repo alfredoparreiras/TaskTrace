@@ -25,7 +25,7 @@
     <h1 class="initial__heading text-primary test mb-3">TaskTrace</h1>
 </div>
 <h3 data-aos="fade-down" data-aos-duration="1500" class="text-primary sub__heading text-center mx-3">Bridging the gap between <span class="fw-bolder accent">To-Do</span> and <span class="fw-bolder accent">Done</span>.</h3>
-<div data-aos="fade-down" data-aos-duration="1500" class="d-flex flex-column d-sm-inline-flex justify-content-sm-center flex-sm-row gap-3 my-5 w-75">
+<div data-aos="fade-up" data-aos-duration="1500" class="d-flex flex-column d-sm-inline-flex justify-content-sm-center flex-sm-row gap-3 my-5 w-75">
     <a href="${pageContext.request.contextPath}/signup" class="text-decoration-none">
         <button type="button" class="btn btn-primary btn-mobile btn-lg text-white initial__button btn-sign p-2">Sign Up</button>
     </a>
