@@ -7,6 +7,12 @@
 --%>
 <%
     String errorMessage = (String) request.getAttribute("errorMessage");
+
+    String title = null;
+    if(request.getAttribute("title") != null)
+        title = (String) request.getAttribute("title");
+
+
 %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -62,9 +68,9 @@
 </header>
 <section class="w-75 my-5 mx-auto">
     <h3 class="text-center text-primary mb-5">Add a Task</h3>
-    <form action="${pageContext.request.contextPath}/addTask" method="post">
+    <form action="${pageContext.request.contextPath}/task" method="post">
         <div class="mb-3">
-            <input type="text" class="form-control" id="title" placeholder="Title" name="title">
+            <input type="text" class="form-control" id="title" placeholder="Title" name="title" value="<%= title != null ? title : "" %>">
             <div id="emailHelp" class="form-text">Must be less than 20 characters.</div>
         </div>
         <div class="">

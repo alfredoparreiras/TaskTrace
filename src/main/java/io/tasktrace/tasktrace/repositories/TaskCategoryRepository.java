@@ -41,6 +41,30 @@ public class TaskCategoryRepository {
         }
     }
 
+    public List<String> getTaskCategoriesByID(String taskId) throws ClassNotFoundException, SQLException
+    {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
+        {
+            String query = "SELECT tc.task_id, c.title FROM TaskCategories AS tc INNER JOIN task_trace.Category C on tc.category_id = C.category_id WHERE tc.task_id = ?;";
+
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1,taskId);
+
+            List<String> taskCategories= new ArrayList<>();
+
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next())
+                taskCategories.add(resultSet.getString("title"));
+
+            if(taskCategories.isEmpty())
+                throw new SQLException("Failed to retrieve Category List by Tasks. ");
+
+            return taskCategories;
+        }
+    }
+
+
     public boolean addTaskCategory(TaskCategory taskCategory) throws ClassNotFoundException, SQLException
     {
         Class.forName("com.mysql.cj.jdbc.Driver");

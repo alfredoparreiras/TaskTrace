@@ -13,27 +13,65 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
-@WebServlet(name = "AddTaskController", urlPatterns = {"/addTask"})
-public class AddTaskController extends HttpServlet {
+@WebServlet(name = "TaskController", urlPatterns = {"/task"})
+public class TaskController extends HttpServlet {
     String addTaskMessage = null;
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        request.getRequestDispatcher("WEB-INF/addTask.jsp").forward(request,response);
+    @Override
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String method = request.getParameter("-_method");
+        if(method != null && method.equals("put"))
+            doPut(request,response);
+        else
+            super.service(request,response);
     }
-
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        String taskId = null;
+
+        if(request.getParameter("taskId") != null)
+        {
+            try {
+                taskId = request.getParameter("taskId");
+                HttpSession session = request.getSession(true);
+                User user = (User) session.getAttribute("loggedUser");
+
+                TaskRepository taskRepository = new TaskRepository(user);
+                TaskCategoryRepository taskCategoryRepository = new TaskCategoryRepository();
+
+                Task task = taskRepository.getTaskById(taskId);
+
+                String categoriesInRow = null;
+                List<String> categories = taskCategoryRepository.getTaskCategoriesByID(taskId);
+                for(String category : categories){
+                    categoriesInRow += category + ",";
+                }
+
+                request.setAttribute("title", task.getTitle());
+                request.setAttribute("description", task.getDescription());
+                request.setAttribute("dueDate", task.getDueDate().toString());
+                request.setAttribute("category", categoriesInRow);
+                request.setAttribute("priority", task.getPriority().toString());
+
+            } catch (ClassNotFoundException | SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        request.getRequestDispatcher("WEB-INF/task.jsp").forward(request,response);
+    }
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
         try {
             // Retrieving Data from Request
             String titleParameter = request.getParameter("title");
@@ -115,12 +153,32 @@ public class AddTaskController extends HttpServlet {
             else
             {
                 request.setAttribute("errorMessage", addTaskMessage);
-                request.getRequestDispatcher("WEB-INF/addTask.jsp").forward(request,response);
+                request.getRequestDispatcher("WEB-INF/task.jsp").forward(request,response);
             }
         } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        try {
+            String taskById = request.getParameter("taskId");
+
+            HttpSession session = request.getSession(true);
+            User user = (User) session.getAttribute("loggedUser");
+            TaskRepository taskRepository = new TaskRepository(user);
+            Task task = taskRepository.getTaskById(taskById);
+
+            boolean isUpdated = taskRepository.updateTask(task);
+
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     private LocalDate parsingDueDate(String date, HttpServletRequest request)
     {
         try{
@@ -131,7 +189,6 @@ public class AddTaskController extends HttpServlet {
             return null;
         }
     }
-
     private Priority parsingPriority(String priority, HttpServletRequest request)
     {
         try{
@@ -143,8 +200,8 @@ public class AddTaskController extends HttpServlet {
             return null;
         }
     }
-
-    private boolean validateAction(HttpServletRequest request, User loggedUser, String titleParameter) {
+    private boolean validateAction(HttpServletRequest request, User loggedUser, String titleParameter)
+    {
         if(loggedUser == null)
         {
             request.setAttribute("errorMessage", "Please log in to add a task.");

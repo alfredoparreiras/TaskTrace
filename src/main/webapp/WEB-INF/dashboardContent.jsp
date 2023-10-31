@@ -1,7 +1,7 @@
 <div class="large_screen_layout align-self-center mt-5 w-100">
   <div class="d-flex flex-column my-1">
     <div style="display: flex; justify-content: flex-end;">
-      <a href="${pageContext.request.contextPath}/addTask">
+      <a href="${pageContext.request.contextPath}/task">
         <button type="button" class="btn btn-outline-primary mb-2">Add Task</button>
       </a>
     </div>
@@ -24,60 +24,61 @@
         boolean done = task.getIsDone();
       %>
       <%--If Task is complete we must change the row style.--%>
-      <tr class="<%=done ? "text-decoration-line-through" : "" %>">
-        <%--TASK INDEX--%>
-        <th class="align-middle" scope="row"><%=index++%></th>
-        <%--TASK BUTTONS--%>
-        <td class="align-middle">
-          <div class="d-flex pt-3" role="group" aria-label="Basic mixed styles example">
-              <form action="${pageContext.request.contextPath}/dashboard" method="get">
-                <input type="hidden" name="_method" value="put">
-                <input type="hidden" name="action" value="<%= done ? "reset" : "complete"%>">
-                <input type="hidden" name="task_id" value="<%=task.getId()%>">
-                <button type="submit" class="btn <%=done ? "btn-warning" : "btn-success"%> w-100">
-                  <%=done ? "Reset" : "Complete"%>
-                </button>
-              </form>
-          </div>
-        </td>
-        <%--TASK TITLE--%>
-        <td class="align-middle"><%=task.getTitle()%></td>
-        <%--TASK DESCRIPTION--%>
-        <td class="align-middle"><%=task.getDescription()%></td>
-        <%--TASK PRIORITY--%>
-        <%if (task.getPriority().toString().equals("URGENT") || task.getPriority().toString().equals("HIGH")) {%>
-        <td class="text-danger align-middle"><%=StringUtils.toCapitalCase(task.getPriority().toString())%></td>
-        <%} else {%>
-        <td class="align-middle"><%=StringUtils.toCapitalCase(task.getPriority().toString())%></td>
+      <tr class="<%=done ? "text-decoration-line-through" : "" %>"
+          onclick="redirectToTask('<%=task.getId()%>')">
+          <%--TASK INDEX--%>
+          <th class="align-middle" scope="row"><%=index++%></th>
+      <%--TASK BUTTONS--%>
+      <td class="align-middle">
+        <div class="d-flex pt-3" role="group" aria-label="Basic mixed styles example">
+          <form action="${pageContext.request.contextPath}/dashboard" method="get">
+            <input type="hidden" name="_method" value="put">
+            <input type="hidden" name="action" value="<%= done ? "reset" : "complete"%>">
+            <input type="hidden" name="task_id" value="<%=task.getId()%>">
+            <button type="submit" class="btn <%=done ? "btn-warning" : "btn-success"%> w-100">
+              <%=done ? "Reset" : "Complete"%>
+            </button>
+          </form>
+        </div>
+      </td>
+      <%--TASK TITLE--%>
+      <td class="align-middle"><%=task.getTitle()%></td>
+      <%--TASK DESCRIPTION--%>
+      <td class="align-middle"><%=task.getDescription()%></td>
+      <%--TASK PRIORITY--%>
+      <%if (task.getPriority().toString().equals("URGENT") || task.getPriority().toString().equals("HIGH")) {%>
+      <td class="text-danger align-middle"><%=StringUtils.toCapitalCase(task.getPriority().toString())%></td>
+      <%} else {%>
+      <td class="align-middle"><%=StringUtils.toCapitalCase(task.getPriority().toString())%></td>
+      <%}%>
+      <%--TASK CATEGORIES--%>
+      <%if (taskCategory != null) {%>
+      <%
+        List<String> displayCategories = new ArrayList<>();
+        displayCategories = taskCategory.get(task.getId().toString());
+      %>
+      <%if (displayCategories != null) {%>
+      <td class="align-middle">
+        <%for (String category : displayCategories) {%>
+        <span><%=StringUtils.toCapitalCase(category) + " "%></span>
         <%}%>
-        <%--TASK CATEGORIES--%>
-        <%if (taskCategory != null) {%>
-        <%
-          List<String> displayCategories = new ArrayList<>();
-          displayCategories = taskCategory.get(task.getId().toString());
-        %>
-        <%if (displayCategories != null) {%>
-        <td class="align-middle">
-          <%for (String category : displayCategories) {%>
-          <span><%=StringUtils.toCapitalCase(category) + " "%></span>
-          <%}%>
-        </td>
-        <%} else {%>
-        <td class="align-middle">No category</td>
-        <%}%>
-        <%}%>
-        <%--TASK DESCRIPTION--%>
-        <td class="align-middle"><%=DateConversionToString.getFormattedDate(task.getDueDate(), "EEE, dd MMM yyyy")%></td>
-        <td class="align-middle">
-          <div class="d-flex pt-3" role="group" aria-label="Basic mixed styles example">
-            <form action="${pageContext.request.contextPath}/dashboard" method="get">
-              <input type="hidden" name="_method" value="delete">
-              <input type="hidden" name="task_id" value="<%=task.getId()%>">
-              <button type="submit" class="btn btn-danger w-100 me-3"
-                      onclick="return confirm('This action cannot be undone. Are you sure you want to delete this task?');">Delete</button>
-            </form>
-          </div>
-        </td>
+      </td>
+      <%} else {%>
+      <td class="align-middle">No category</td>
+      <%}%>
+      <%}%>
+      <%--TASK DESCRIPTION--%>
+      <td class="align-middle"><%=DateConversionToString.getFormattedDate(task.getDueDate(), "EEE, dd MMM yyyy")%></td>
+      <td class="align-middle">
+        <div class="d-flex pt-3" role="group" aria-label="Basic mixed styles example">
+          <form action="${pageContext.request.contextPath}/dashboard" method="get">
+            <input type="hidden" name="_method" value="delete">
+            <input type="hidden" name="task_id" value="<%=task.getId()%>">
+            <button type="submit" class="btn btn-danger w-100 me-3"
+                    onclick="return confirm('This action cannot be undone. Are you sure you want to delete this task?');">Delete</button>
+          </form>
+        </div>
+      </td>
       </tr>
       <%}%>
       <%}%>
@@ -88,7 +89,7 @@
 
 
 <div class="small_screen_layout">
-    <a href="${pageContext.request.contextPath}/addTask" class="p-1">
+    <a href="${pageContext.request.contextPath}/task" class="p-1">
       <button type="button" class="btn btn-primary w-100 p-2">Add Task</button>
     </a>
   <%if (tasks != null) { %>

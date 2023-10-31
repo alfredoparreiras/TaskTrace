@@ -52,6 +52,13 @@
     <link href="${pageContext.request.contextPath}/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="${pageContext.request.contextPath}/resources/bootstrap/js/bootstrap.min.js"></script>
     <link rel="icon" href="${pageContext.request.contextPath}/resources/images/icons/dashboard.svg" type="image/svg">
+
+    <script>
+        function redirectToTask(taskId) {
+            let url = '${pageContext.request.contextPath}/task?taskId=' + taskId;
+            window.location.href = url;
+        }
+    </script>
 </head>
 <body>
 <header class="header bg-primary d-flex align-items-center justify-content-between w-100">
@@ -70,7 +77,7 @@
 </header>
 <section class="dashboard__tasks d-flex flex-column align-items-center mt-5 mt-sm-5 mt-md-5 mt-lg-5">
     <div class="d-flex flex-column w-85 mb-5 justify-content-center">
-        <h2>Hello <span class="text-capitalize"><%=user.getFirstName()%></span>,<br> You have <span class="border-bottom border-1 border-dark"><%=pendingTasks%></span> pending task(s).</h2>
+        <h2>Hello <span class="text-capitalize"><%=user.getFirstName()%></span>,<br> You have <span class="border-bottom border-1 border-dark"><%=pendingTasks%></span> pending <%=pendingTasks.equals("0") ? "task" : "tasks"%>.</h2>
         <%@ include file="dashboarStats.jsp" %>
         <%@ include file="dashboardContent.jsp" %>
     </div>
