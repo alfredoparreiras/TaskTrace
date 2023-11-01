@@ -40,6 +40,11 @@
         complete = String.valueOf(stats.get("complete"));
         pendingTasks = String.valueOf(stats.get("overdue") + stats.get("ongoing"));
     }
+
+    boolean isSortingDirectionDESC = false;
+
+    if(request.getAttribute("sortingDirection") != null)
+        isSortingDirectionDESC = (boolean) request.getAttribute("sortingDirection");
 %>
 
 <html>

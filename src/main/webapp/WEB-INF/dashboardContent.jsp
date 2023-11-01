@@ -1,6 +1,6 @@
 <div class="large_screen_layout align-self-center mt-5 w-100">
   <div class="d-flex flex-column my-1">
-    <div style="display: flex; justify-content: flex-end;">
+    <div class="d-flex justify-content-end">
       <a href="${pageContext.request.contextPath}/task">
         <button type="button" class="btn btn-outline-primary mb-2">Add Task</button>
       </a>
@@ -8,13 +8,13 @@
     <table class="table table-hover">
       <thead>
       <tr>
-        <th scope="col">Id</th>
+        <th scope="col"><a href="${pageContext.request.contextPath}/dashboard?column=created_at&direction=<%=isSortingDirectionDESC ? "ASC" : "DESC"%>" class="text-decoration-none" style="color: #000000">Id</a></th>
         <th scope="col">Action</th>
-        <th scope="col">Title</th>
-        <th scope="col">Description</th>
-        <th scope="col">Priority</th>
+        <th scope="col"><a href="${pageContext.request.contextPath}/dashboard?column=title&direction=<%=isSortingDirectionDESC ? "ASC" : "DESC"%>"class="text-decoration-none" style="color: #000000">Title</a></th>
+        <th scope="col"><a href="${pageContext.request.contextPath}/dashboard?column=description&direction=<%=isSortingDirectionDESC ? "ASC" : "DESC"%>"class="text-decoration-none" style="color: #000000">Description</a></th>
+        <th scope="col"><a href="${pageContext.request.contextPath}/dashboard?column=priority&direction=<%=isSortingDirectionDESC ? "ASC" : "DESC"%>"class="text-decoration-none" style="color: #000000">Priority</a></th>
         <th scope="col">Category</th>
-        <th scope="col">Due Date</th>
+        <th scope="col"><a href="${pageContext.request.contextPath}/dashboard?column=due_date&direction=<%=isSortingDirectionDESC ? "ASC" : "DESC"%>"class="text-decoration-none" style="color: #000000">Due Date</a></th>
         <th scope="col"></th>
       </tr>
       </thead>
@@ -24,8 +24,7 @@
         boolean done = task.getIsDone();
       %>
       <%--If Task is complete we must change the row style.--%>
-      <tr class="<%=done ? "text-decoration-line-through" : "" %>"
-          onclick="redirectToTask('<%=task.getId()%>')">
+      <tr class="<%=done ? "text-decoration-line-through" : "" %>">
           <%--TASK INDEX--%>
           <th class="align-middle" scope="row"><%=index++%></th>
       <%--TASK BUTTONS--%>
@@ -42,14 +41,14 @@
         </div>
       </td>
       <%--TASK TITLE--%>
-      <td class="align-middle"><%=task.getTitle()%></td>
+      <td class="align-middle" onclick="redirectToTask('<%=task.getId()%>')"><%=task.getTitle()%></td>
       <%--TASK DESCRIPTION--%>
-      <td class="align-middle"><%=task.getDescription()%></td>
+      <td class="align-middle" onclick="redirectToTask('<%=task.getId()%>')"><%=task.getDescription()%></td>
       <%--TASK PRIORITY--%>
       <%if (task.getPriority().toString().equals("URGENT") || task.getPriority().toString().equals("HIGH")) {%>
-      <td class="text-danger align-middle"><%=StringUtils.toCapitalCase(task.getPriority().toString())%></td>
+      <td class="text-danger align-middle" onclick="redirectToTask('<%=task.getId()%>')"><%=StringUtils.toCapitalCase(task.getPriority().toString())%></td>
       <%} else {%>
-      <td class="align-middle"><%=StringUtils.toCapitalCase(task.getPriority().toString())%></td>
+      <td class="align-middle" onclick="redirectToTask('<%=task.getId()%>')"><%=StringUtils.toCapitalCase(task.getPriority().toString())%></td>
       <%}%>
       <%--TASK CATEGORIES--%>
       <%if (taskCategory != null) {%>
@@ -58,24 +57,27 @@
         displayCategories = taskCategory.get(task.getId().toString());
       %>
       <%if (displayCategories != null) {%>
-      <td class="align-middle">
+      <td class="align-middle" onclick="redirectToTask('<%=task.getId()%>')">
         <%for (String category : displayCategories) {%>
         <span><%=StringUtils.toCapitalCase(category) + " "%></span>
         <%}%>
       </td>
       <%} else {%>
-      <td class="align-middle">No category</td>
+      <td class="align-middle" onclick="redirectToTask('<%=task.getId()%>')">No category</td>
       <%}%>
       <%}%>
       <%--TASK DESCRIPTION--%>
-      <td class="align-middle"><%=DateConversionToString.getFormattedDate(task.getDueDate(), "EEE, dd MMM yyyy")%></td>
+      <td class="align-middle" onclick="redirectToTask('<%=task.getId()%>')"><%=DateConversionToString.getFormattedDate(task.getDueDate(), "EEE, dd MMM yyyy")%></td>
       <td class="align-middle">
         <div class="d-flex pt-3" role="group" aria-label="Basic mixed styles example">
           <form action="${pageContext.request.contextPath}/dashboard" method="get">
             <input type="hidden" name="_method" value="delete">
             <input type="hidden" name="task_id" value="<%=task.getId()%>">
-            <button type="submit" class="btn btn-danger w-100 me-3"
-                    onclick="return confirm('This action cannot be undone. Are you sure you want to delete this task?');">Delete</button>
+            <div data-bs-theme="dark">
+              <button type="submit" class="btn-close" aria-label="Close" onclick="return confirm('This action cannot be undone. Are you sure you want to delete this task?');"></button>
+            </div>
+<%--            <button type="submit" class="btn btn-danger w-100 me-3"--%>
+<%--                    onclick="return confirm('This action cannot be undone. Are you sure you want to delete this task?');">Delete</button>--%>
           </form>
         </div>
       </td>
@@ -89,9 +91,8 @@
 
 
 <div class="small_screen_layout">
-    <a href="${pageContext.request.contextPath}/task" class="p-1">
-      <button type="button" class="btn btn-primary w-100 p-2">Add Task</button>
-    </a>
+    <a href="${pageContext.request.contextPath}/task" class="btn btn-primary w-100 p-2">Add Task</a>
+
   <%if (tasks != null) { %>
     <%for (Task task : tasks) {
       boolean done = task.getIsDone();

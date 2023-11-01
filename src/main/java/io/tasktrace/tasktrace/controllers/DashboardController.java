@@ -25,7 +25,8 @@ import java.util.Map;
 @WebServlet(name="DashboardController", urlPatterns = {"/dashboard"})
 public class DashboardController extends HttpServlet {
     @Override
-    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
         String method = request.getParameter("_method");
         if(method != null && method.equals("delete"))
             doDelete(request,response);
@@ -36,7 +37,8 @@ public class DashboardController extends HttpServlet {
 
     }
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
 
             // Retrieve tasks and Calculate all Stats
             try {
@@ -44,7 +46,23 @@ public class DashboardController extends HttpServlet {
                 User user = (User)session.getAttribute("loggedUser");
                 TaskRepository taskRepository = new TaskRepository(user);
 
-                List<Task> tasks = taskRepository.getAllTasks();
+
+                String column = "created_at";
+                String direction = "ASC";
+                boolean isSortingDirection = false;
+
+                if(request.getParameter("column") != null)
+                    column= request.getParameter("column");
+
+                if(request.getParameter("direction") != null) {
+                    direction = request.getParameter("direction");
+                    if(direction.equals("ASC"))
+                        request.setAttribute("sortingDirection", false);
+                    else
+                        request.setAttribute("sortingDirection", true);
+                }
+
+                List<Task> tasks = taskRepository.getAllTasksByOrder(column, direction);
 
                 //Convert a List<Category> into a Map.
                 Map<Integer, String> categoryMap = getCategoriesMap();
@@ -70,7 +88,8 @@ public class DashboardController extends HttpServlet {
             }
     }
     @Override
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
         try {
             HttpSession session = request.getSession(true);
 

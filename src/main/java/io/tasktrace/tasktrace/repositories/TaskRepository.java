@@ -8,6 +8,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,6 +44,33 @@ public class TaskRepository {
                 return tasks;
         }
     }
+
+    public List<Task> getAllTasksByOrder(String column, String direction) throws ClassNotFoundException , SQLException{
+
+        List<String> validColumns = Arrays.asList("title","description","due_date", "priority", "created_at");
+        List<String> validDirections = Arrays.asList("ASC", "DESC");
+
+        if(!validColumns.contains(column) || !validDirections.contains(direction))
+            throw new IllegalArgumentException("Invalid Column name or Sorting Direction");
+        //Retrieving User from Session
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
+        {
+            String query = "SELECT * FROM task_trace.Task WHERE user_id=? ORDER BY " + column + " " + direction + ";";
+
+
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, user.getId());
+
+            List<Task> tasks = new ArrayList<>();
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next())
+                tasks.add(readNextTask(resultSet));
+            return tasks;
+        }
+    }
+
+
     public Task getTaskById(String taskId) throws ClassNotFoundException, SQLException
     {
         Class.forName("com.mysql.cj.jdbc.Driver");
