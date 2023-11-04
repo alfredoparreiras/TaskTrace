@@ -2,6 +2,7 @@ package io.tasktrace.tasktrace.controllers;
 
 import io.tasktrace.tasktrace.entities.User;
 import io.tasktrace.tasktrace.repositories.UserRepository;
+import io.tasktrace.tasktrace.utils.PasswordUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -88,6 +89,6 @@ public class LoginController extends HttpServlet {
 
 
     private boolean validPassword(User user, String password) {
-        return user.getPassword().equals(password.trim());
+        return PasswordUtil.verifyPassword(password,user.getPassword());
     }
 }

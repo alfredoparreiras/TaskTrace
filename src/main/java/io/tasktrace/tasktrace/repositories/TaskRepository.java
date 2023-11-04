@@ -19,10 +19,10 @@ public class TaskRepository {
     private final User user;
 
     public TaskRepository(User user) {
-        String databaseName = "task_trace";
+        String databaseName = System.getenv("TaskTrace_DB_Name");
         this.JDBC_URL =  "jdbc:mysql://localhost:3306/" + databaseName;
-        this.JDBC_USERNAME = "root";
-        this.JDBC_PASSWORD = "19229094";
+        this.JDBC_USERNAME = System.getenv("TaskTrace_DB_User");
+        this.JDBC_PASSWORD = System.getenv("TaskTrace_DB_Password");
         this.user = Objects.requireNonNull(user, "User must be logged.");
     }
 
@@ -31,7 +31,7 @@ public class TaskRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
         {
-                String query = "SELECT * FROM task_trace.Task WHERE user_id=? " +
+                String query = "SELECT * FROM TaskTrace.Task WHERE user_id=? " +
                                "ORDER BY created_at ASC ";
 
                 PreparedStatement statement = connection.prepareStatement(query);
@@ -56,7 +56,7 @@ public class TaskRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
         {
-            String query = "SELECT * FROM task_trace.Task WHERE user_id=? ORDER BY " + column + " " + direction + ";";
+            String query = "SELECT * FROM TaskTrace.Task WHERE user_id=? ORDER BY " + column + " " + direction + ";";
 
 
             PreparedStatement statement = connection.prepareStatement(query);
@@ -76,7 +76,7 @@ public class TaskRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
         {
-            String query = "SELECT * FROM task_trace.Task WHERE task_id=? ";
+            String query = "SELECT * FROM TaskTrace.Task WHERE id=? ";
 
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, taskId);
@@ -96,7 +96,7 @@ public class TaskRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD))
         {
-            String query = "INSERT INTO task_trace.Task (task_id, title, description, due_date, priority, user_id, created_at, updated_at, is_done) \n" +
+            String query = "INSERT INTO TaskTrace.Task (id, title, description, due_date, priority, user_id, created_at, updated_at, is_done) \n" +
                            "VALUES (?,?,?,?,?,?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, ?);";
 
             PreparedStatement statement = connection.prepareStatement(query);
@@ -120,7 +120,7 @@ public class TaskRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD))
         {
-            String query = "DELETE FROM task_trace.Task WHERE task_id=?";
+            String query = "DELETE FROM TaskTrace.Task WHERE id=?";
 
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, taskId);
@@ -135,10 +135,10 @@ public class TaskRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD))
         {
-            String query = "UPDATE task_trace.Task " +
+            String query = "UPDATE TaskTrace.Task " +
                            "SET title = ?, description = ?, due_date = ?, priority = ?, " +
                            "updated_at = CURRENT_TIMESTAMP, is_done = ? " +
-                           "WHERE task_id = ?";
+                           "WHERE id = ?";
 
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, task.getTitle());
@@ -162,7 +162,7 @@ public class TaskRepository {
 
 
     private Task readNextTask(ResultSet resultSet) throws SQLException {
-        String id = resultSet.getString("task_id");
+        String id = resultSet.getString("id");
         String title = resultSet.getString("title");
         String description = resultSet.getString("description");
         LocalDate dueDate = resultSet.getObject("due_date", LocalDate.class);

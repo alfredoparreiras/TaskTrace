@@ -12,10 +12,10 @@ public class TaskCategoryRepository {
     private final String JDBC_PASSWORD;
 
     public TaskCategoryRepository() {
-        String databaseName = "task_trace";
+        String databaseName = System.getenv("TaskTrace_DB_Name");
         this.JDBC_URL =  "jdbc:mysql://localhost:3306/" + databaseName;
-        this.JDBC_USERNAME = "root";
-        this.JDBC_PASSWORD = "19229094";
+        this.JDBC_USERNAME = System.getenv("TaskTrace_DB_User");
+        this.JDBC_PASSWORD = System.getenv("TaskTrace_DB_Password");
 
     }
 
@@ -24,7 +24,7 @@ public class TaskCategoryRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
         {
-            String query = "SELECT * FROM task_trace.TaskCategories";
+            String query = "SELECT * FROM TaskTrace.TaskCategories";
 
             PreparedStatement statement = connection.prepareStatement(query);
 
@@ -70,7 +70,7 @@ public class TaskCategoryRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USERNAME ,JDBC_PASSWORD))
         {
-            String query = "insert into task_trace.TaskCategories (task_id, category_id)" +
+            String query = "insert into TaskTrace.TaskCategories (task_id, category_id)" +
                            "values (?, ?);";
 
             PreparedStatement statement = connection.prepareStatement(query);

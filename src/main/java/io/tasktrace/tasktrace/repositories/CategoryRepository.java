@@ -13,10 +13,10 @@ public class CategoryRepository {
     private final String JDBC_PASSWORD;
 
     public CategoryRepository() {
-        String databaseName = "task_trace";
+        String databaseName = System.getenv("TaskTrace_DB_Name");
         this.JDBC_URL =  "jdbc:mysql://localhost:3306/" + databaseName;
-        this.JDBC_USERNAME = "root";
-        this.JDBC_PASSWORD = "19229094";
+        this.JDBC_USERNAME = System.getenv("TaskTrace_DB_User");
+        this.JDBC_PASSWORD = System.getenv("TaskTrace_DB_Password");
 
     }
 
@@ -25,7 +25,7 @@ public class CategoryRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
         {
-            String query = "SELECT * FROM task_trace.Category";
+            String query = "SELECT * FROM TaskTrace.Category";
 
             PreparedStatement statement = connection.prepareStatement(query);
             List<Category> categories= new ArrayList<>();
@@ -44,7 +44,7 @@ public class CategoryRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
         {
-            String query = "SELECT * FROM task_trace.Category";
+            String query = "SELECT * FROM TaskTrace.Category";
 
             PreparedStatement statement = connection.prepareStatement(query);
             Map<Integer,String> categories = new HashMap<>();
@@ -66,7 +66,7 @@ public class CategoryRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
         {
-            String query = "SELECT * FROM task_trace.TaskCategories WHERE task_id = ?";
+            String query = "SELECT * FROM TaskTrace.TaskCategories WHERE task_id = ?";
 
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1,task_id.toString());
@@ -90,7 +90,7 @@ public class CategoryRepository {
         try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
         {
 
-            String query = "insert into task_trace.Category (title)\n" +
+            String query = "insert into TaskTrace.Category (title)\n" +
                            "values (?);";
 
             PreparedStatement statement = connection.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
@@ -123,7 +123,7 @@ public class CategoryRepository {
         try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
         {
 
-            String query = "DELETE from task_trace.Category WHERE category_id = ?";
+            String query = "DELETE from TaskTrace.Category WHERE category_id = ?";
 
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1,categoryId);
@@ -166,7 +166,7 @@ public class CategoryRepository {
 
 
     private Category readNextCategory(ResultSet resultSet) throws SQLException {
-        int category_id = resultSet.getInt("category_id");
+        int category_id = resultSet.getInt("id");
         String name = resultSet.getString("title");
 
         return new Category(category_id, name);

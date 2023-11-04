@@ -101,7 +101,7 @@
     }
 }
 
-@media screen and ( min-height: 837px)
+@media screen and ( min-height: 800px)
 {
     .large--footer-signup{
         position: fixed;
