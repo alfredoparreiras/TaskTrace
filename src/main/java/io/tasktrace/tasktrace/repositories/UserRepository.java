@@ -15,8 +15,7 @@ public class UserRepository {
     private final String JDBC_PASSWORD;
 
     public UserRepository() {
-        String databaseName = System.getenv("TaskTrace_DB_Name");
-        this.JDBC_URL =  "jdbc:mysql://localhost:3306/" + databaseName;
+        this.JDBC_URL =  System.getenv("TaskTrace_Database_URL");
         this.JDBC_USERNAME = System.getenv("TaskTrace_DB_User");
         this.JDBC_PASSWORD = System.getenv("TaskTrace_DB_Password");
     }
