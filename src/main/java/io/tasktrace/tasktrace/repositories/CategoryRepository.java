@@ -13,9 +13,9 @@ public class CategoryRepository {
     private final String JDBC_PASSWORD;
 
     public CategoryRepository() {
-        this.JDBC_URL =  System.getenv("TaskTrace_Database_URL");
-        this.JDBC_USERNAME = System.getenv("TaskTrace_DB_User");
-        this.JDBC_PASSWORD = System.getenv("TaskTrace_DB_Password");
+        this.JDBC_URL =  System.getenv("DATABASE_URL");
+        this.JDBC_USERNAME = System.getenv("DATABASE_USER");
+        this.JDBC_PASSWORD = System.getenv("DATABASE_PASSWORD");
 
     }
 
@@ -137,32 +137,6 @@ public class CategoryRepository {
             return false;
         }
     }
-
-//    public boolean updateCategory(Category category) throws ClassNotFoundException, SQLException
-//    {
-//        Class.forName("com.mysql.cj.jdbc.Driver");
-//        try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
-//        {
-//
-//            String query = "UPDATE task_trace.Category" +
-//                           "title = ?" +
-//                           "WHERE category_id = ?";
-//
-//            PreparedStatement statement = connection.prepareStatement(query);
-//            statement.setString(1,category.getCategory());
-//            statement.setInt(2, category.getId());
-//
-//            int rowsAffected = statement.executeUpdate();
-//            if(rowsAffected > 0)
-//                return true;
-//
-//            if(rowsAffected == 0)
-//                throw new SQLException("Failed in update Category to DB.");
-//
-//            return false;
-//        }
-//    }
-
 
     private Category readNextCategory(ResultSet resultSet) throws SQLException {
         int category_id = resultSet.getInt("id");

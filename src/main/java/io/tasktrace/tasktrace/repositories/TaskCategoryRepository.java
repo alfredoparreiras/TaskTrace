@@ -12,9 +12,9 @@ public class TaskCategoryRepository {
     private final String JDBC_PASSWORD;
 
     public TaskCategoryRepository() {
-        this.JDBC_URL =  System.getenv("TaskTrace_Database_URL");
-        this.JDBC_USERNAME = System.getenv("TaskTrace_DB_User");
-        this.JDBC_PASSWORD = System.getenv("TaskTrace_DB_Password");
+        this.JDBC_URL =  System.getenv("DATABASE_URL");
+        this.JDBC_USERNAME = System.getenv("DATABASE_USER");
+        this.JDBC_PASSWORD = System.getenv("DATABASE_PASSWORD");
 
     }
 
@@ -45,7 +45,10 @@ public class TaskCategoryRepository {
         Class.forName("com.mysql.cj.jdbc.Driver");
         try(Connection connection = DriverManager.getConnection(JDBC_URL,JDBC_USERNAME,JDBC_PASSWORD))
         {
-            String query = "SELECT tc.task_id, c.title FROM TaskCategories AS tc INNER JOIN task_trace.Category C on tc.category_id = C.category_id WHERE tc.task_id = ?;";
+
+            String query = "SELECT tc.task_id, c.title FROM TaskCategories AS tc " +
+                            "INNER JOIN TaskTrace.Category AS c ON tc.category_id = c.id " +
+                            "WHERE tc.task_id = ?";
 
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1,taskId);

@@ -19,9 +19,9 @@ public class TaskRepository {
     private final User user;
 
     public TaskRepository(User user) {
-        this.JDBC_URL =  System.getenv("TaskTrace_Database_URL");
-        this.JDBC_USERNAME = System.getenv("TaskTrace_DB_User");
-        this.JDBC_PASSWORD = System.getenv("TaskTrace_DB_Password");
+        this.JDBC_URL =  System.getenv("DATABASE_URL");
+        this.JDBC_USERNAME = System.getenv("DATABASE_USER");
+        this.JDBC_PASSWORD = System.getenv("DATABASE_PASSWORD");
         this.user = Objects.requireNonNull(user, "User must be logged.");
     }
 

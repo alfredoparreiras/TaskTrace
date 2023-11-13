@@ -70,7 +70,8 @@ public class SignUpController extends HttpServlet {
         }
         catch(SQLException | ClassNotFoundException e)
         {
-            throw new RuntimeException(e);
+            // Log the exception
+            e.printStackTrace();
         }
         finally
         {

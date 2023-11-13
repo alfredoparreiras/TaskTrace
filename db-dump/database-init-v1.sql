@@ -122,7 +122,7 @@ CREATE TABLE `User` (
 
 LOCK TABLES `User` WRITE;
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
-INSERT INTO `User` VALUES (1,'Alfredo','Silva','admin','a.alfredops@gmail.com', CURRENT_TIMESTAMP);
+INSERT INTO `User` VALUES (1,'admin','admin','admin','admin@admin.com', CURRENT_TIMESTAMP);
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
